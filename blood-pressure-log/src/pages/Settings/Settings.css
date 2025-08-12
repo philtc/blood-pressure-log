@@ -1,0 +1,59 @@
+/* Settings page styles */
+
+ion-list {
+  background: transparent;
+}
+
+ion-item {
+  --background: var(--ion-card-background);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  --border-radius: 12px;
+  --min-height: 60px;
+  --background-hover: var(--ion-color-light);
+  --background-activated: var(--ion-color-light);
+  --background-focused: var(--ion-color-light);
+}
+
+ion-item ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 1.5rem;
+  margin-right: 16px;
+}
+
+ion-item[color="danger"] {
+  --background: rgba(var(--ion-color-danger-rgb), 0.1);
+  --color: var(--ion-color-danger);
+  --background-hover: rgba(var(--ion-color-danger-rgb), 0.15);
+  --background-activated: rgba(var(--ion-color-danger-rgb), 0.15);
+  --background-focused: rgba(var(--ion-color-danger-rgb), 0.15);
+}
+
+ion-item[color="danger"] ion-icon {
+  color: var(--ion-color-danger);
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  ion-item {
+    --background: var(--ion-color-step-50);
+    --background-hover: var(--ion-color-step-100);
+    --background-activated: var(--ion-color-step-100);
+    --background-focused: var(--ion-color-step-100);
+  }
+  
+  ion-item[color="danger"] {
+    --background: rgba(var(--ion-color-danger-rgb), 0.2);
+    --background-hover: rgba(var(--ion-color-danger-rgb), 0.3);
+    --background-activated: rgba(var(--ion-color-danger-rgb), 0.3);
+    --background-focused: rgba(var(--ion-color-danger-rgb), 0.3);
+  }
+}
+
+/* Alert buttons */
+.alert-button.danger {
+  color: var(--ion-color-danger);
+}

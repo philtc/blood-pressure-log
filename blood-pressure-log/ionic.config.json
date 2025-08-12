@@ -1,0 +1,7 @@
+{
+  "name": "blood-pressure-log",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}

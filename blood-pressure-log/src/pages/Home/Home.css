@@ -1,0 +1,63 @@
+/* Custom styles for the Home page */
+
+/* Center the spinner */
+ion-spinner {
+  --color: var(--ion-color-primary);
+  width: 40px;
+  height: 40px;
+  margin: 20px auto;
+}
+
+/* Style the empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ion-color-medium);
+}
+
+.empty-state ion-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: var(--ion-color-medium);
+}
+
+/* Card styles */
+ion-card {
+  margin: 0 0 16px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+/* Section headers */
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  margin: 24px 0 16px;
+}
+
+/* Badge styles */
+ion-badge {
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 12px;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  ion-content {
+    --padding-start: 20%;
+    --padding-end: 20%;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  ion-card {
+    --background: var(--ion-color-step-50);
+  }
+  
+  h2 {
+    color: var(--ion-text-color);
+  }
+}
