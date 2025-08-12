@@ -53,11 +53,77 @@ class StorageService {
 
   async exportToCSV(): Promise<string> {
     const readings = await this.getReadings();
-    const headers = 'Date,Systolic,Diastolic,Pulse,Notes\n';
-    const csvRows = readings.map(reading => 
-      `"${reading.date}",${reading.systolic},${reading.diastolic},${reading.pulse || ''},"${reading.notes || ''}"`
-    );
-    return headers + csvRows.join('\n');
+    const headers = ['Date', 'Systolic', 'Diastolic', 'Pulse', 'Notes'];
+    const rows = readings.map(reading => [
+      new Date(reading.timestamp).toISOString(),
+      reading.systolic,
+      reading.diastolic,
+      reading.pulse || '',
+      reading.notes || ''
+    ]);
+    
+    return [
+      headers.join(','),
+      ...rows.map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+  }
+
+  async importFromCSV(file: File): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      
+      reader.onload = async (event) => {
+        try {
+          const text = event.target?.result as string;
+          if (!text) {
+            throw new Error('No file content');
+          }
+          
+          const lines = text.split('\n');
+          const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+          
+          // Skip header row and process data rows
+          const newReadings = lines.slice(1).map(line => {
+            if (!line.trim()) return null;
+            
+            const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+            const reading: Omit<BloodPressureReading, 'id' | 'date' | 'timestamp'> = {
+              systolic: parseInt(values[headers.indexOf('systolic')], 10),
+              diastolic: parseInt(values[headers.indexOf('diastolic')], 10)
+            };
+            
+            const pulseIndex = headers.indexOf('pulse');
+            if (pulseIndex !== -1 && values[pulseIndex]) {
+              reading.pulse = parseInt(values[pulseIndex], 10);
+            }
+            
+            const notesIndex = headers.indexOf('notes');
+            if (notesIndex !== -1 && values[notesIndex]) {
+              reading.notes = values[notesIndex];
+            }
+            
+            return reading;
+          }).filter(Boolean);
+          
+          // Save all new readings
+          for (const reading of newReadings) {
+            if (reading) {
+              await this.addReading(reading);
+            }
+          }
+          
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      reader.onerror = () => {
+        reject(new Error('Error reading file'));
+      };
+      
+      reader.readAsText(file);
+    });
   }
 }
 

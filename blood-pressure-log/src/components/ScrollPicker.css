@@ -1,0 +1,147 @@
+.scroll-picker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  user-select: none;
+}
+
+.picker-label {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 8px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.picker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--ion-color-light);
+  border-radius: 16px;
+  padding: 15px 20px;
+  min-width: 100px;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.picker-values {
+  position: relative;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.picker-value {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.picker-value.selected {
+  font-size: 2.8rem;
+  color: var(--ion-color-primary);
+  opacity: 1;
+  font-weight: 700;
+}
+
+/* Color variants */
+.picker-container.color-secondary .picker-value.selected,
+.picker-container.color-warning .picker-value.selected {
+  color: var(--ion-color-secondary);
+}
+
+.picker-container.color-success .picker-value.selected {
+  color: var(--ion-color-success);
+}
+
+.picker-container.color-danger .picker-value.selected {
+  color: var(--ion-color-danger);
+}
+
+.picker-container.color-secondary .picker-button:active,
+.picker-container.color-warning .picker-button:active {
+  background: rgba(var(--ion-color-secondary-rgb), 0.1);
+  color: var(--ion-color-secondary);
+}
+
+.picker-button {
+  background: transparent;
+  border: none;
+  color: var(--ion-color-medium);
+  font-size: 1.5rem;
+  padding: 5px 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  outline: none;
+}
+
+.picker-button:active {
+  background: rgba(var(--ion-color-primary-rgb), 0.1);
+  color: var(--ion-color-primary);
+}
+
+.picker-button.increment {
+  border-bottom: 1px solid var(--ion-color-light-shade);
+}
+
+.picker-button.decrement {
+  border-top: 1px solid var(--ion-color-light-shade);
+}
+
+.picker-unit {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .picker-container {
+    background: var(--ion-color-step-100);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .picker-value {
+    color: var(--ion-color-light);
+    opacity: 0.7;
+  }
+  
+  .picker-value.selected {
+    color: var(--ion-color-primary);
+    opacity: 1;
+  }
+  
+  .picker-button.increment,
+  .picker-button.decrement {
+    border-color: var(--ion-color-step-200);
+  }
+}
+
+/* Animation for value change */
+@keyframes valueChange {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.value-changing {
+  animation: valueChange 0.3s ease;
+}

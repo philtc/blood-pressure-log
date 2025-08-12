@@ -16,8 +16,12 @@ const Home: React.FC = () => {
   const loadReadings = async () => {
     try {
       const allReadings = await storageService.getReadings();
+      console.log('All readings from storage:', allReadings);
+      
       // Sort by most recent first
       const sortedReadings = allReadings.sort((a, b) => b.timestamp - a.timestamp);
+      console.log('Sorted readings:', sortedReadings);
+      
       setReadings(sortedReadings);
     } catch (error) {
       console.error('Error loading readings:', error);
@@ -66,11 +70,6 @@ const Home: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>Blood Pressure Log</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={() => history.push('/add')}>
-              <IonIcon slot="icon-only" icon={addOutline} />
-            </IonButton>
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
       
@@ -95,9 +94,46 @@ const Home: React.FC = () => {
           ) : (
             <>
               <h2>Latest Reading</h2>
-              {latestReading && (
+              {latestReading ? (
                 <div style={{ marginBottom: '24px' }}>
+                  <div style={{ 
+                    marginBottom: '16px', 
+                    padding: '16px', 
+                    background: 'var(--ion-color-step-100)',
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}>
+                    <div style={{ 
+                      fontSize: '2.5rem', 
+                      fontWeight: 'bold', 
+                      color: 'var(--ion-text-color)',
+                      lineHeight: '1.2'
+                    }}>
+                      {latestReading.systolic} / {latestReading.diastolic}
+                      <span style={{ 
+                        fontSize: '1.2rem', 
+                        fontWeight: 'normal', 
+                        color: 'var(--ion-color-medium)', 
+                        marginLeft: '6px',
+                        verticalAlign: 'middle'
+                      }}>
+                        mmHg
+                      </span>
+                    </div>
+                    <div style={{ 
+                      color: 'var(--ion-color-medium)', 
+                      fontSize: '0.95rem', 
+                      marginTop: '8px',
+                      fontWeight: '500'
+                    }}>
+                      {new Date(latestReading.timestamp).toLocaleString()}
+                    </div>
+                  </div>
                   <BloodPressureCard reading={latestReading} onDelete={confirmDelete} />
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '20px', color: 'var(--ion-color-medium)' }}>
+                  No readings available
                 </div>
               )}
 

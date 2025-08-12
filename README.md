@@ -45,13 +45,3 @@ Our color-coded system helps you quickly identify if your readings are in the no
 
 Take charge of your heart health today with Blood Pressure Log - because your health deserves attention, not complexity. 💙
 
-## 🛠 Built With
-
-- **React Native** - For cross-platform mobile development
-- **SQLite** - For secure, local data storage
-- **React Navigation** - For smooth, intuitive navigation
-- **React Native Paper** - For beautiful, Material Design components
-- **React Native Document Picker** - For file export
-- Android Gradle Plugin 8.14
-- AGP 8.4.0
-- Java 17

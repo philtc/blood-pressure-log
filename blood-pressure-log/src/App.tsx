@@ -1,15 +1,10 @@
-import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact, isPlatform } from '@ionic/react';
+import { setupIonicReact, isPlatform, IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { useEffect, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
 
-/* Pages */
-import Home from './pages/Home/Home';
-import AddReading from './pages/AddReading/AddReading';
-import History from './pages/History/History';
-import Trends from './pages/Trends/Trends';
-import Settings from './pages/Settings/Settings';
+/* Components */
+import Layout from './components/Layout/Layout';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -54,19 +49,17 @@ const App: React.FC = () => {
     loadTheme();
   }, []);
 
+  const toggleDarkMode = async () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    document.body.classList.toggle('dark', newDarkMode);
+    await Preferences.set({ key: 'darkMode', value: String(newDarkMode) });
+  };
+
   return (
-    <IonApp className={darkMode ? 'dark' : ''}>
+    <IonApp>
       <IonReactRouter>
-        <IonRouterOutlet>
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/add" component={AddReading} />
-          <Route exact path="/history" component={History} />
-          <Route exact path="/trends" component={Trends} />
-          <Route exact path="/settings" component={Settings} />
-          <Route exact path="/">
-            <Redirect to="/home" />
-          </Route>
-        </IonRouterOutlet>
+        <Layout darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
       </IonReactRouter>
     </IonApp>
   );

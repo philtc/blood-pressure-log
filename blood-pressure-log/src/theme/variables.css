@@ -1,2 +1,75 @@
-/* For information on how to create your own theme, please see:
-http://ionicframework.com/docs/theming/ */
+/* Custom color palette */
+:root {
+  /* Dark theme colors */
+  --ion-color-dark: #232323;
+  --ion-color-dark-rgb: 35, 35, 35;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1f1f1f;
+  --ion-color-dark-tint: #393939;
+
+  /* Primary color - using the custom blue */
+  --ion-color-primary: #78DCE8;
+  --ion-color-primary-rgb: 120, 220, 232;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #6ac2cc;
+  --ion-color-primary-tint: #86e0ea;
+
+  /* Secondary color - using the custom orange */
+  --ion-color-secondary: #FFD866;
+  --ion-color-secondary-rgb: 255, 216, 102;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #e0be5a;
+  --ion-color-secondary-tint: #ffdc75;
+
+  /* Success color - using the custom green */
+  --ion-color-success: #A9DC76;
+  --ion-color-success-rgb: 169, 220, 118;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0, 0, 0;
+  --ion-color-success-shade: #95c268;
+  --ion-color-success-tint: #b2e084;
+
+  /* Danger color - using the custom red */
+  --ion-color-danger: #FF6188;
+  --ion-color-danger-rgb: 255, 97, 136;
+  --ion-color-danger-contrast: #000000;
+  --ion-color-danger-contrast-rgb: 0, 0, 0;
+  --ion-color-danger-shade: #e05578;
+  --ion-color-danger-tint: #ff7194;
+
+  /* Medium color - using custom gray */
+  --ion-color-medium: #4B4B4B;
+  --ion-color-medium-rgb: 75, 75, 75;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #424242;
+  --ion-color-medium-tint: #5d5d5d;
+
+  /* Light color - using lighter gray */
+  --ion-color-light: #373737;
+  --ion-color-light-rgb: 55, 55, 55;
+  --ion-color-light-contrast: #ffffff;
+  --ion-color-light-contrast-rgb: 255, 255, 255;
+  --ion-color-light-shade: #303030;
+  --ion-color-light-tint: #4b4b4b;
+
+  /* Additional custom colors */
+  --ion-background-color: var(--ion-color-dark);
+  --ion-background-color-rgb: var(--ion-color-dark-rgb);
+  
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255, 255, 255;
+  
+  --ion-border-color: var(--ion-color-medium);
+  
+  --ion-toolbar-background: var(--ion-color-dark);
+  --ion-toolbar-border-color: var(--ion-color-medium);
+  
+  --ion-item-background: var(--ion-color-dark);
+  --ion-item-border-color: var(--ion-color-medium);
+  
+  --ion-card-background: var(--ion-color-light);
+}

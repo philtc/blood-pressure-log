@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { 
   IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
   IonButtons, IonBackButton, IonList, IonItem, IonLabel,
-  IonToggle, IonButton, IonIcon, useIonToast, IonAlert
+  IonToggle, IonButton, IonIcon, useIonToast, IonAlert,
+  IonListHeader, IonNote
 } from '@ionic/react';
-import { moon, sunny, trashOutline, downloadOutline } from 'ionicons/icons';
+import { moon, sunny, trashOutline, downloadOutline, cloudUploadOutline } from 'ionicons/icons';
 import { storageService } from '../../utils/storage';
 import { Preferences } from '@capacitor/preferences';
 import './Settings.css';
@@ -72,36 +73,105 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      try {
+        await storageService.importFromCSV(file);
+        present({
+          message: 'Data imported successfully',
+          duration: 2000,
+          color: 'success'
+        });
+      } catch (error) {
+        present({
+          message: 'Failed to import data',
+          duration: 2000,
+          color: 'danger'
+        });
+      }
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/home" />
+            <IonBackButton defaultHref="/" />
           </IonButtons>
           <IonTitle>Settings</IonTitle>
         </IonToolbar>
       </IonHeader>
-
-      <IonContent className="ion-padding">
+      <IonContent>
         <IonList>
+          <IonListHeader>
+            <IonLabel>Appearance</IonLabel>
+          </IonListHeader>
           <IonItem>
-            <IonIcon slot="start" icon={darkMode ? moon : sunny} />
+            <IonIcon slot="start" icon={darkMode ? sunny : moon} />
             <IonLabel>Dark Mode</IonLabel>
             <IonToggle 
               checked={darkMode} 
               onIonChange={toggleDarkMode} 
+              aria-label="Dark mode toggle"
             />
           </IonItem>
-
-          <IonItem button onClick={exportData}>
+          
+          <IonListHeader>
+            <IonLabel>Data Management</IonLabel>
+          </IonListHeader>
+          <IonItem>
             <IonIcon slot="start" icon={downloadOutline} />
-            <IonLabel>Export Data</IonLabel>
+            <IonLabel>
+              <h3>Export Data</h3>
+              <IonNote>Export your readings as a CSV file</IonNote>
+            </IonLabel>
+            <IonButton 
+              fill="clear" 
+              onClick={exportData}
+              aria-label="Export data"
+            >
+              Export
+            </IonButton>
           </IonItem>
-
-          <IonItem button onClick={confirmDelete} color="danger">
-            <IonIcon slot="start" icon={trashOutline} />
-            <IonLabel>Delete All Data</IonLabel>
+          
+          <IonItem>
+            <IonIcon slot="start" icon={cloudUploadOutline} />
+            <IonLabel>
+              <h3>Import Data</h3>
+              <IonNote>Import readings from a CSV file</IonNote>
+            </IonLabel>
+            <input 
+              type="file" 
+              id="import-file" 
+              accept=".csv" 
+              style={{ display: 'none' }}
+              onChange={handleFileImport}
+            />
+            <IonButton 
+              fill="clear" 
+              onClick={() => document.getElementById('import-file')?.click()}
+              aria-label="Import data"
+            >
+              Import
+            </IonButton>
+          </IonItem>
+          
+          <IonItem lines="full">
+            <IonIcon slot="start" icon={trashOutline} color="danger" />
+            <IonLabel>
+              <h3>Delete All Data</h3>
+              <IonNote>This cannot be undone</IonNote>
+            </IonLabel>
+            <IonButton 
+              fill="clear" 
+              color="danger" 
+              onClick={() => setShowDeleteAlert(true)}
+              aria-label="Delete all data"
+            >
+              Delete All
+            </IonButton>
           </IonItem>
         </IonList>
 
