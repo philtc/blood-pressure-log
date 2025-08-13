@@ -20,8 +20,15 @@ class StorageService {
   }
 
   async init() {
-    this.store = new Storage();
-    await this.store.create();
+    try {
+      console.log('Initializing storage...');
+      this.store = new Storage();
+      await this.store.create();
+      console.log('Storage initialized successfully');
+    } catch (error) {
+      console.error('Error initializing storage:', error);
+      throw error;
+    }
   }
 
   async addReading(reading: Omit<BloodPressureReading, 'id' | 'date' | 'timestamp'>) {
@@ -40,8 +47,15 @@ class StorageService {
   }
 
   async getReadings(): Promise<BloodPressureReading[]> {
-    if (!this.store) await this.init();
-    return (await this.store?.get(this.STORAGE_KEY)) || [];
+    try {
+      if (!this.store) await this.init();
+      const readings = await this.store?.get(this.STORAGE_KEY);
+      console.log('Retrieved readings from storage:', readings);
+      return readings || [];
+    } catch (error) {
+      console.error('Error getting readings:', error);
+      return [];
+    }
   }
 
   async deleteReading(id: string) {

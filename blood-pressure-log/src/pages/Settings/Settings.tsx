@@ -5,15 +5,17 @@ import {
   IonToggle, IonButton, IonIcon, useIonToast, IonAlert,
   IonListHeader, IonNote
 } from '@ionic/react';
-import { moon, sunny, trashOutline, downloadOutline, cloudUploadOutline } from 'ionicons/icons';
+import { moon, sunny, trashOutline, downloadOutline, cloudUploadOutline, arrowBack } from 'ionicons/icons';
 import { storageService } from '../../utils/storage';
 import { Preferences } from '@capacitor/preferences';
+import { useHistory } from 'react-router-dom';
 import './Settings.css';
 
 const Settings: React.FC = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [present] = useIonToast();
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     loadTheme();
@@ -93,12 +95,23 @@ const Settings: React.FC = () => {
     }
   };
 
+  // Handle back navigation
+  const handleBack = () => {
+    if (history.length > 1) {
+      history.goBack();
+    } else {
+      history.push('/');
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/" />
+            <IonButton onClick={handleBack}>
+              <IonIcon slot="icon-only" icon={arrowBack} />
+            </IonButton>
           </IonButtons>
           <IonTitle>Settings</IonTitle>
         </IonToolbar>

@@ -1,0 +1,32 @@
+/* Styles for the side menu to ensure good contrast in dark theme */
+
+ion-menu {
+  --width: 280px;
+}
+
+ion-menu ion-content {
+  --background: var(--ion-color-dark);
+  --color: var(--ion-text-color);
+}
+
+ion-menu ion-list {
+  background: transparent;
+}
+
+ion-menu ion-item {
+  --background: transparent;
+  --color: var(--ion-text-color);
+}
+
+ion-menu ion-item .label-text,
+ion-menu ion-item ion-label {
+  color: var(--ion-text-color);
+}
+
+ion-menu ion-item ion-icon {
+  color: var(--ion-text-color);
+}
+
+ion-menu .selected {
+  --background: var(--ion-color-step-100);
+}

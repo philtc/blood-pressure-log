@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  IonSplitPane,
-  IonRouterOutlet,
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
-  IonMenuButton
-} from '@ionic/react';
-import { Route, Redirect, useLocation } from 'react-router-dom';
+import { IonRouterOutlet, IonSplitPane } from '@ionic/react';
+import { Route, Redirect, Switch, useLocation, useHistory } from 'react-router-dom';
 import Menu from '../Menu/Menu';
 
 /* Pages */
@@ -31,6 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ darkMode, onToggleDarkMode }) => {
 
   // Update title based on current route
   useEffect(() => {
+    console.log('Current path:', location.pathname);
     const path = location.pathname;
     switch (path) {
       case '/':
@@ -54,32 +45,19 @@ const Layout: React.FC<LayoutProps> = ({ darkMode, onToggleDarkMode }) => {
   }, [location.pathname]);
 
   return (
-    <IonSplitPane contentId="main">
+    <IonSplitPane contentId="main-content">
       <Menu />
-      
-      <IonPage id="main">
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonMenuButton />
-            </IonButtons>
-            <IonTitle>{currentTitle}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        
-        <IonContent className="ion-padding">
-          <IonRouterOutlet>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/add" component={AddReading} />
-            <Route exact path="/history" component={History} />
-            <Route exact path="/trends" component={Trends} />
-            <Route exact path="/settings" component={Settings} />
-            <Route exact path="/">
-              <Redirect to="/" />
-            </Route>
-          </IonRouterOutlet>
-        </IonContent>
-      </IonPage>
+      <IonRouterOutlet id="main-content">
+        <Switch>
+          <Route exact path="/" render={() => <Redirect to="/home" />} />
+          <Route exact path="/home" component={Home} />
+          <Route exact path="/add" component={AddReading} />
+          <Route exact path="/history" component={History} />
+          <Route exact path="/trends" component={Trends} />
+          <Route exact path="/settings" component={Settings} />
+          <Route render={() => <Redirect to="/home" />} />
+        </Switch>
+      </IonRouterOutlet>
     </IonSplitPane>
   );
 };

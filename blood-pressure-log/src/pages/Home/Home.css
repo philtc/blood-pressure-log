@@ -1,53 +1,123 @@
 /* Custom styles for the Home page */
 
-/* Center the spinner */
+/* Layout */
+.content-container {
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Loading spinner */
 ion-spinner {
   --color: var(--ion-color-primary);
   width: 40px;
   height: 40px;
   margin: 20px auto;
+  display: block;
 }
 
-/* Style the empty state */
+/* Empty state */
 .empty-state {
   text-align: center;
   padding: 40px 20px;
-  color: var(--ion-color-medium);
+  margin: 40px 0;
+  background-color: var(--ion-card-background);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  border: 1px solid var(--ion-color-medium);
 }
 
-.empty-state ion-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  color: var(--ion-color-medium);
-}
-
-/* Card styles */
-ion-card {
+.empty-state h3 {
+  color: var(--ion-text-color);
   margin: 0 0 16px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  font-weight: 500;
 }
 
-/* Section headers */
-h2 {
+.empty-state p {
+  color: var(--ion-text-color);
+  opacity: 0.85;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Latest reading card */
+.latest-reading {
+  margin-bottom: 24px;
+}
+
+.reading-card {
+  background: var(--ion-color-light);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reading-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--ion-color-primary);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.unit {
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: var(--ion-color-medium);
+  margin-left: 6px;
+}
+
+.reading-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  color: var(--ion-color-medium);
+  font-size: 0.95rem;
+}
+
+.reading-pulse {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reading-pulse ion-icon {
+  color: var(--ion-color-danger);
+}
+
+/* Recent readings section */
+.recent-readings {
+  margin-top: 32px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--ion-color-dark);
-  margin: 24px 0 16px;
-}
-
-/* Badge styles */
-ion-badge {
-  font-weight: 500;
-  padding: 6px 10px;
-  border-radius: 12px;
+  color: var(--ion-text-color);
 }
 
 /* Responsive adjustments */
 @media (min-width: 768px) {
+  .content-container {
+    padding: 24px;
+  }
+  
   ion-content {
-    --padding-start: 20%;
-    --padding-end: 20%;
+    --padding-start: 5%;
+    --padding-end: 5%;
   }
 }
 
@@ -59,5 +129,17 @@ ion-badge {
   
   h2 {
     color: var(--ion-text-color);
+  }
+  
+  /* Ensure empty state has strong contrast in dark mode */
+  .empty-state {
+    background-color: var(--ion-color-step-100);
+    border-color: var(--ion-color-step-150);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+  .empty-state h3,
+  .empty-state p {
+    color: var(--ion-text-color);
+    opacity: 1;
   }
 }

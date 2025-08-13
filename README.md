@@ -24,10 +24,9 @@ Take control of your heart health with Blood Pressure Log - the most intuitive w
 - Individuals monitoring hypertension or hypotension
 - Patients advised to track their blood pressure regularly
 - Anyone interested in maintaining optimal cardiovascular health
-- Caregivers managing health records for family members
+- Caregivers managing health records for a family member
 
 ## 📱 Features
-
 - Simple, intuitive interface
 - Works offline
 - Set reminders for regular measurements
@@ -35,7 +34,6 @@ Take control of your heart health with Blood Pressure Log - the most intuitive w
 - Secure data storage on your device
 
 ## 📊 Understanding Your Numbers
-
 Our color-coded system helps you quickly identify if your readings are in the normal range or if they require attention:
 
 - 🟢 Systolic < 120 and Diastolic < 80
