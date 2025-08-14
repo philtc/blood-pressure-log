@@ -42,7 +42,7 @@ const Menu: React.FC<MenuProps> = () => {
           <IonTitle>Menu</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent color="dark">
+      <IonContent>
         <IonList>
           {menuItems.map((item) => (
             <IonItem

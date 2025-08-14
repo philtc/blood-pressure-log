@@ -2,11 +2,34 @@
 
 ion-menu {
   --width: 280px;
+  /* Ensure menu container uses themed background */
+  --background: var(--ion-background-color);
+  --ion-background-color: var(--ion-background-color);
 }
 
 ion-menu ion-content {
-  --background: var(--ion-color-dark);
+  /* Follow current theme */
+  --background: var(--ion-background-color);
   --color: var(--ion-text-color);
+}
+
+/* Ensure shadow parts also inherit the background */
+ion-menu::part(container) {
+  background: var(--ion-background-color);
+}
+
+ion-menu ion-content::part(background) {
+  background: var(--ion-background-color);
+}
+
+/* Some platforms render the scroll container separately; ensure it matches */
+ion-menu ion-content::part(scroll) {
+  background: var(--ion-background-color);
+}
+
+/* Ensure the main content area within ion-content also inherits */
+ion-menu ion-content::part(content) {
+  background: var(--ion-background-color);
 }
 
 ion-menu ion-list {

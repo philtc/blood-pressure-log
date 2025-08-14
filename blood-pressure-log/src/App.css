@@ -8,49 +8,23 @@ ion-app {
 /* Ensure full height for the app */
 html, body, #root, .App, ion-app, ion-content {
   height: 100%;
-  --background: var(--ion-color-dark);
+  /* Background should follow current theme variables */
+  --background: var(--ion-background-color);
 }
 
 /* Base font and typography */
 :root {
   --ion-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
                     'Helvetica Neue', Arial, sans-serif;
-  
-  /* Base colors from custom palette */
-  --ion-background-color: var(--ion-color-dark);
-  --ion-background-color-rgb: var(--ion-color-dark-rgb);
-  --ion-text-color: #ffffff;
-  --ion-text-color-rgb: 255, 255, 255;
-  --ion-border-color: var(--ion-color-medium);
-  --ion-item-background: var(--ion-color-dark);
-  --ion-toolbar-background: var(--ion-color-dark);
-  --ion-tab-bar-background: var(--ion-color-dark);
-  --ion-card-background: var(--ion-color-light);
-  
   /* Status bar */
   --ion-statusbar-padding: 0;
-  
   /* Custom variables for consistent spacing */
   --ion-padding: 16px;
   --ion-margin: 16px;
   --ion-border-radius: 8px;
 }
 
-/* Dark mode overrides - using our custom dark theme by default */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Using our custom dark theme colors */
-    --ion-background-color: var(--ion-color-dark);
-    --ion-background-color-rgb: var(--ion-color-dark-rgb);
-    --ion-text-color: #ffffff;
-    --ion-text-color-rgb: 255, 255, 255;
-    --ion-border-color: var(--ion-color-medium);
-    --ion-item-background: var(--ion-color-dark);
-    --ion-toolbar-background: var(--ion-color-dark);
-    --ion-tab-bar-background: var(--ion-color-dark);
-    --ion-card-background: var(--ion-color-light);
-  }
-}
+/* Remove media query overrides; theming is controlled via CSS variables in variables.css and the body.dark class */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
