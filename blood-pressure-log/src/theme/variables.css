@@ -54,6 +54,12 @@
   --ion-item-background: #ffffff;
   --ion-item-border-color: #e0e0e0;
   --ion-card-background: #ffffff;
+
+  /* Custom accents (explicit palette mapping) */
+  --myblue: #78DCE8;         /* color-blue-dark */
+  --myblue-rgb: 120, 220, 232;
+  --myorange: #FFD866;       /* color-orange-dark */
+  --myorange-rgb: 255, 216, 102;
 }
 
 /* Dark theme overrides when body has .dark */
@@ -65,12 +71,13 @@
   --ion-color-dark-shade: #1f1f1f;
   --ion-color-dark-tint: #393939;
 
-  --ion-color-medium: #4B4B4B;
-  --ion-color-medium-rgb: 75, 75, 75;
-  --ion-color-medium-contrast: #ffffff;
-  --ion-color-medium-contrast-rgb: 255, 255, 255;
-  --ion-color-medium-shade: #424242;
-  --ion-color-medium-tint: #5d5d5d;
+  /* Make 'medium' lighter in dark mode for readability */
+  --ion-color-medium: #b0b0b0;
+  --ion-color-medium-rgb: 176, 176, 176;
+  --ion-color-medium-contrast: #000000;
+  --ion-color-medium-contrast-rgb: 0, 0, 0;
+  --ion-color-medium-shade: #9c9c9c;
+  --ion-color-medium-tint: #c4c4c4;
 
   --ion-color-light: #373737;
   --ion-color-light-rgb: 55, 55, 55;
@@ -89,4 +96,10 @@
   --ion-item-background: var(--ion-color-dark);
   --ion-item-border-color: var(--ion-color-medium);
   --ion-card-background: var(--ion-color-light);
+
+  /* Custom accents remain the same in dark mode */
+  --myblue: #78DCE8;
+  --myblue-rgb: 120, 220, 232;
+  --myorange: #FFD866;
+  --myorange-rgb: 255, 216, 102;
 }

@@ -23,8 +23,8 @@ const BloodPressureCard: React.FC<BloodPressureCardProps> = ({ reading, onDelete
   return (
     <IonCard>
       <IonCardHeader>
-        <IonCardSubtitle style={{ fontSize: '0.9rem' }}>{formattedDate}</IonCardSubtitle>
-        <IonCardTitle style={{ marginTop: '8px', fontSize: '1.8rem', fontWeight: 'bold' }}>
+        <IonCardSubtitle style={{ fontSize: '0.9rem', color: 'var(--ion-color-medium)' }}>{formattedDate}</IonCardSubtitle>
+        <IonCardTitle style={{ marginTop: '8px', fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--ion-text-color)' }}>
           {reading.systolic} / {reading.diastolic} <span style={{ fontSize: '1rem', fontWeight: 'normal' }}>mmHg</span>
         </IonCardTitle>
       </IonCardHeader>
@@ -34,7 +34,7 @@ const BloodPressureCard: React.FC<BloodPressureCardProps> = ({ reading, onDelete
           {reading.pulse && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '0.9rem', color: 'var(--ion-color-medium)' }}>Pulse:</span>
-              <span style={{ fontWeight: '500' }}>{reading.pulse} bpm</span>
+              <span style={{ fontWeight: '600', color: 'var(--ion-text-color)' }}>{reading.pulse} bpm</span>
             </div>
           )}
           {onDelete && (
@@ -51,7 +51,7 @@ const BloodPressureCard: React.FC<BloodPressureCardProps> = ({ reading, onDelete
         {reading.notes && (
           <div style={{ marginTop: '12px', fontSize: '0.9rem' }}>
             <div style={{ color: 'var(--ion-color-medium)', marginBottom: '4px' }}>Notes:</div>
-            <div>{reading.notes}</div>
+            <div style={{ color: 'var(--ion-text-color)' }}>{reading.notes}</div>
           </div>
         )}
       </IonCardContent>

@@ -19,7 +19,7 @@
 
 .empty-state h3 {
   margin-bottom: 8px;
-  color: var(--ion-color-dark);
+  color: var(--ion-text-color);
   font-weight: 500;
 }
 

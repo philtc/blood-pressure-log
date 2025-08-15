@@ -1,0 +1,97 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+// Explicitly enforce Java/Kotlin 17 for the AdMob plugin module
+configure(project(':capacitor-community-admob')) {
+    afterEvaluate {
+        if (project.hasProperty('android')) {
+            android {
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
+                }
+                // Some older AGP versions require kotlinOptions at top-level, keep both
+                try {
+                    kotlinOptions {
+                        jvmTarget = '17'
+                    }
+                } catch (Throwable ignored) { }
+            }
+        }
+        try {
+            def kotlinCompile = Class.forName('org.jetbrains.kotlin.gradle.tasks.KotlinCompile')
+            tasks.withType(kotlinCompile).configureEach {
+                kotlinOptions { jvmTarget = '17' }
+            }
+        } catch (Throwable ignored) { }
+        try {
+            def jvmTargetEnum = Class.forName('org.jetbrains.kotlin.gradle.dsl.JvmTarget').getField('JVM_17').get(null)
+            tasks.matching { it.hasProperty('compilerOptions') }.configureEach { t ->
+                def opts = t.property('compilerOptions')
+                if (opts && opts.hasProperty('jvmTarget')) {
+                    opts.jvmTarget.set(jvmTargetEnum)
+                }
+            }
+        } catch (Throwable ignored) { }
+    }
+}
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath 'com.google.gms:google-services:4.4.2'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+apply from: "variables.gradle"
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// Ensure all Android modules compile with Java 17 to match local JDK
+subprojects { subproject ->
+    afterEvaluate {
+        if (subproject.hasProperty('android') && subproject.android.hasProperty('compileOptions')) {
+            subproject.android.compileOptions.sourceCompatibility = JavaVersion.VERSION_17
+            subproject.android.compileOptions.targetCompatibility = JavaVersion.VERSION_17
+        }
+        // Align Kotlin JVM target with Java 17 for plugins using Kotlin (if present)
+        try {
+            def kotlinCompile = Class.forName('org.jetbrains.kotlin.gradle.tasks.KotlinCompile')
+            tasks.withType(kotlinCompile).configureEach {
+                kotlinOptions {
+                    jvmTarget = '17'
+                }
+            }
+        } catch (Throwable ignored) {
+            // Kotlin plugin not applied in this subproject
+        }
+        // Kotlin 2.0+: use compilerOptions API if available (some plugins may ignore kotlinOptions)
+        try {
+            def jvmTargetEnum = Class.forName('org.jetbrains.kotlin.gradle.dsl.JvmTarget').getField('JVM_17').get(null)
+            tasks.matching { it.hasProperty('compilerOptions') }.configureEach { t ->
+                def opts = t.property('compilerOptions')
+                if (opts && opts.hasProperty('jvmTarget')) {
+                    opts.jvmTarget.set(jvmTargetEnum)
+                }
+            }
+        } catch (Throwable ignored) {
+            // Kotlin 2 API not present; previous block should handle Kotlin <2
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

@@ -8,7 +8,8 @@ import {
   IonList, 
   IonItem, 
   IonIcon, 
-  IonLabel
+  IonLabel, 
+  IonMenuToggle
 } from '@ionic/react';
 import { 
   homeOutline, 
@@ -45,20 +46,19 @@ const Menu: React.FC<MenuProps> = () => {
       <IonContent>
         <IonList>
           {menuItems.map((item) => (
-            <IonItem
-              key={item.path}
-              routerLink={item.path}
-              routerDirection="root"
-              detail={false}
-              lines="none"
-              className={location.pathname === item.path ? 'selected' : ''}
-            >
-              <IonIcon slot="start" icon={item.icon} />
-              <IonLabel>{item.title}</IonLabel>
-            </IonItem>
+            <IonMenuToggle key={item.path} autoHide={true}>
+              <IonItem
+                routerLink={item.path}
+                routerDirection="root"
+                detail={false}
+                lines="none"
+                className={location.pathname === item.path ? 'selected' : ''}
+              >
+                <IonIcon slot="start" icon={item.icon} />
+                <IonLabel>{item.title}</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
           ))}
-          
-
         </IonList>
       </IonContent>
     </IonMenu>

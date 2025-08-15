@@ -33,7 +33,7 @@ html, body, #root, .App, ion-app, ion-content {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--ion-color-dark);
+  background: var(--ion-background-color);
 }
 
 ::-webkit-scrollbar-thumb {

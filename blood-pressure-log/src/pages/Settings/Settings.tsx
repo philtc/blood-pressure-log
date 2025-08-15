@@ -123,7 +123,10 @@ const Settings: React.FC = () => {
           </IonListHeader>
           <IonItem>
             <IonIcon slot="start" icon={darkMode ? sunny : moon} />
-            <IonLabel>Dark Mode</IonLabel>
+            <IonLabel>
+              <h3>Appearance</h3>
+              <IonNote>Current: {darkMode ? 'Dark' : 'Light'}</IonNote>
+            </IonLabel>
             <IonToggle 
               checked={darkMode} 
               onIonChange={toggleDarkMode} 

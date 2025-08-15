@@ -36,17 +36,22 @@ const ScrollPicker: React.FC<ScrollPickerProps> = ({
 
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     const delta = Math.sign(e.deltaY);
     updateValue(currentValue + (delta > 0 ? -step : step));
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsDragging(true);
     setStartY(e.touches[0].clientY);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging) return;
+    e.preventDefault();
+    e.stopPropagation();
     
     const touchY = e.touches[0].clientY;
     const deltaY = startY - touchY;

@@ -25,6 +25,20 @@ import { useHistory } from 'react-router-dom';
 import { close } from 'ionicons/icons';
 import { storageService } from '../../utils/storage';
 import './AddReading.css';
+// AdMob (only active on native platforms)
+import { Capacitor } from '@capacitor/core';
+// We avoid strict typing to prevent build errors if types change; the plugin API is called defensively.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let AdMob: any;
+try {
+  // Dynamically import to avoid impacting web bundle
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  AdMob = require('@capacitor-community/admob');
+  // Some versions export as default, others as named
+  AdMob = AdMob.AdMob || AdMob;
+} catch (e) {
+  AdMob = undefined;
+}
 
 const AddReading: React.FC = () => {
   const [systolic, setSystolic] = useState<number>(120);
@@ -37,6 +51,7 @@ const AddReading: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [adHeight, setAdHeight] = useState<number>(0);
   const history = useHistory();
   const dateButtonRef = useRef<HTMLIonButtonElement>(null);
 
@@ -93,6 +108,54 @@ const AddReading: React.FC = () => {
     return () => {
       prefersDark.removeEventListener('change', handleThemeChange);
     };
+  });
+
+  // AdMob setup only on native platforms and only on this page
+  useIonViewWillEnter(() => {
+    if (!Capacitor.isNativePlatform() || !AdMob) return;
+    void (async () => {
+      try {
+        // Initialize AdMob SDK
+        await AdMob.initialize();
+        // Listen for adaptive banner height to avoid covering buttons
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const sub = AdMob.addListener?.('bannerSizeChanged', (info: { height: number }) => {
+          if (info && typeof info.height === 'number') setAdHeight(info.height);
+        });
+
+        // Show bottom adaptive banner
+        await AdMob.showBanner?.({
+          adId: 'ca-app-pub-2130614856218928/8934846232',
+          adSize: 'ADAPTIVE_BANNER',
+          position: 'BOTTOM_CENTER',
+          margin: 0,
+        });
+
+        // Fallback padding in case event doesn't fire immediately
+        setTimeout(() => setAdHeight((h) => (h > 0 ? h : 60)), 500);
+
+        // Store unsubscribe on ref for cleanup
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).__admob_sub__ = sub;
+      } catch (err) {
+        console.warn('AdMob banner failed to show:', err);
+      }
+    })();
+  });
+
+  useIonViewDidLeave(() => {
+    // Hide banner when leaving the page
+    void (async () => {
+      try {
+        if (AdMob?.hideBanner) await AdMob.hideBanner();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sub = (window as any).__admob_sub__;
+        if (sub && typeof sub.remove === 'function') sub.remove();
+        setAdHeight(0);
+      } catch (e) {
+        // ignore
+      }
+    })();
   });
 
   // Clean up when leaving the page
@@ -188,7 +251,7 @@ const AddReading: React.FC = () => {
           <IonTitle className="app-title">Add Reading</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" style={{ paddingBottom: adHeight ? adHeight + 12 : undefined }}>
         <form onSubmit={(e) => e.preventDefault()} className="reading-form">
           <div className="reading-inputs">
             <div className="input-row">

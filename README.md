@@ -8,7 +8,6 @@ Take control of your heart health with Blood Pressure Log - the most intuitive w
 
 ✅ **Effortless Tracking** - Log your blood pressure in seconds with our clean, distraction-free interface
 📊 **Visual Trends** - Spot patterns and trends with beautiful, easy-to-understand graphs
-🌓 **Dark & Light Modes** - Comfortable viewing in any lighting condition
 📤 **Export Your Data** - Share your readings with your healthcare provider via CSV export
 🔒 **Private & Secure** - Your health data stays on your device
 

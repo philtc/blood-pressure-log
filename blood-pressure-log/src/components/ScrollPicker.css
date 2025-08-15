@@ -25,6 +25,9 @@
   position: relative;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  /* Prevent scroll chaining to the page while swiping */
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 .picker-values {
@@ -36,6 +39,9 @@
   align-items: center;
   overflow: hidden;
   margin: 10px 0;
+  /* Ensure the inner area also does not propagate scroll */
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 .picker-value {
