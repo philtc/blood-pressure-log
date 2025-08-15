@@ -2,10 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { 
   IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
   IonButtons, IonBackButton, IonLoading, IonSegment, 
-  IonSegmentButton, IonLabel, IonButton, IonIcon, IonAlert,
+  IonSegmentButton, IonLabel, IonButton, IonIcon,
   IonCard, IonCardHeader, IonCardContent, IonText
 } from '@ionic/react';
-import { informationCircleOutline, refreshOutline } from 'ionicons/icons';
+import { refreshOutline } from 'ionicons/icons';
 import { storageService, BloodPressureReading } from '../../utils/storage';
 import { format, subDays, isWithinInterval, endOfDay } from 'date-fns';
 import { Line } from 'react-chartjs-2';
@@ -37,7 +37,7 @@ const Trends: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showInfo, setShowInfo] = useState(false);
+  
 
   // Load readings when component mounts
   useEffect(() => {
@@ -94,6 +94,22 @@ const Trends: React.FC = () => {
     return filtered;
   }, [readings, timeRange]);
 
+  // Resolve CSS variables to actual color strings for Canvas
+  const cssVar = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const rgba = (rgbVar: string, alpha: number) => `rgba(${cssVar(rgbVar)}, ${alpha})`;
+  const isDark = document.body.classList.contains('dark');
+
+  // Theme-aware colors
+  const colors = {
+    text: cssVar('--ion-text-color'),
+    card: cssVar('--ion-card-background'),
+    medium: cssVar('--ion-color-medium'),
+    systolic: cssVar('--myblue'),
+    systolicFill: rgba('--myblue-rgb', isDark ? 0.25 : 0.15),
+    diastolic: cssVar('--myorange'),
+    diastolicFill: rgba('--myorange-rgb', isDark ? 0.25 : 0.15),
+  };
+
   // Prepare chart data
   const chartData: ChartData<'line'> = {
     labels: filteredReadings.map(r => format(new Date(r.timestamp), 'MMM d')),
@@ -101,14 +117,15 @@ const Trends: React.FC = () => {
       {
         label: 'Systolic',
         data: filteredReadings.map(r => r.systolic),
-        borderColor: 'var(--ion-color-primary)',
-        backgroundColor: 'rgba(var(--ion-color-primary-rgb), 0.1)',
-        borderWidth: 2,
+        borderColor: colors.systolic,
+        backgroundColor: colors.systolicFill,
+        borderWidth: isDark ? 3 : 2,
         tension: 0.3,
-        pointBackgroundColor: 'var(--ion-color-primary)',
+        pointBackgroundColor: colors.systolic,
         pointBorderColor: '#fff',
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'var(--ion-color-primary)',
+        pointRadius: isDark ? 3 : 2,
+        pointHoverRadius: isDark ? 6 : 5,
+        pointHoverBackgroundColor: colors.systolic,
         pointHoverBorderColor: '#fff',
         pointHitRadius: 10,
         pointBorderWidth: 2,
@@ -116,14 +133,15 @@ const Trends: React.FC = () => {
       {
         label: 'Diastolic',
         data: filteredReadings.map(r => r.diastolic),
-        borderColor: 'var(--ion-color-secondary)',
-        backgroundColor: 'rgba(var(--ion-color-secondary-rgb), 0.1)',
-        borderWidth: 2,
+        borderColor: colors.diastolic,
+        backgroundColor: colors.diastolicFill,
+        borderWidth: isDark ? 3 : 2,
         tension: 0.3,
-        pointBackgroundColor: 'var(--ion-color-secondary)',
+        pointBackgroundColor: colors.diastolic,
         pointBorderColor: '#fff',
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'var(--ion-color-secondary)',
+        pointRadius: isDark ? 3 : 2,
+        pointHoverRadius: isDark ? 6 : 5,
+        pointHoverBackgroundColor: colors.diastolic,
         pointHoverBorderColor: '#fff',
         pointHitRadius: 10,
         pointBorderWidth: 2,
@@ -146,14 +164,19 @@ const Trends: React.FC = () => {
         ticks: {
           maxRotation: 45,
           minRotation: 45,
+          color: isDark ? '#f5f5f5' : colors.text,
         },
       },
       y: {
         beginAtZero: false,
         grid: {
-          color: 'rgba(var(--ion-color-medium-rgb), 0.2)',
+          color: rgba('--ion-color-medium-rgb', isDark ? 0.35 : 0.22),
         },
-        title: { display: true, text: 'Blood Pressure (mmHg)' },
+        border: {
+          color: rgba('--ion-color-medium-rgb', isDark ? 0.5 : 0.3),
+        },
+        title: { display: true, text: 'Blood Pressure (mmHg)', color: isDark ? '#f5f5f5' : colors.text },
+        ticks: { color: isDark ? '#f5f5f5' : colors.text },
         min: 50,
         max: 200
       },
@@ -164,18 +187,17 @@ const Trends: React.FC = () => {
         labels: {
           usePointStyle: true,
           padding: 20,
+          color: isDark ? '#f5f5f5' : colors.text
         },
       },
       tooltip: {
-        backgroundColor: 'var(--ion-color-step-50)',
-        titleColor: 'var(--ion-text-color)', 
-        bodyColor: 'var(--ion-text-color)',
-        borderColor: 'var(--ion-color-medium-shade)',
+        backgroundColor: colors.card,
+        titleColor: colors.text, 
+        bodyColor: colors.text,
+        borderColor: colors.medium,
         borderWidth: 1,
-        padding: 10,
-        displayColors: false,
         callbacks: {
-          label: (context) => {
+          label: function(context) {
             const label = context.dataset.label || '';
             const value = context.parsed.y;
             return `${label}: ${value} mmHg`;
@@ -211,9 +233,6 @@ const Trends: React.FC = () => {
           <IonButtons slot="end">
             <IonButton onClick={loadReadings}>
               <IonIcon slot="icon-only" icon={refreshOutline} />
-            </IonButton>
-            <IonButton onClick={() => setShowInfo(true)}>
-              <IonIcon slot="icon-only" icon={informationCircleOutline} />
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -311,18 +330,7 @@ const Trends: React.FC = () => {
           </div>
         )}
 
-        <IonAlert
-          isOpen={showInfo}
-          onDidDismiss={() => setShowInfo(false)}
-          header="About Blood Pressure Ranges"
-          message={
-            '• Normal: Below 120/80 mmHg\n' +
-            '• Elevated: 120-129/<80 mmHg\n' +
-            '• High (Stage 1): 130-139/80-89 mmHg\n' +
-            '• High (Stage 2): 140+/90+ mmHg'
-          }
-          buttons={['OK']}
-        />
+        
       </IonContent>
     </IonPage>
   );
