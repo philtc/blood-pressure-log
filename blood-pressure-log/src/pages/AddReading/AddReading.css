@@ -95,6 +95,50 @@
   color: var(--ion-color-primary);
 }
 
+/* Pulse checkbox */
+.pulse-checkbox-item {
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 16px;
+}
+
+/* Arm selection */
+.arm-selection-container {
+  margin: 24px 0;
+}
+
+.arm-selection-label {
+  font-size: 1rem;
+  color: var(--ion-color-medium);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.arm-selection-item {
+  --background: var(--ion-color-light);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --border-radius: 12px;
+  --inner-padding-end: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.arm-selection-item:focus-within {
+  --background: var(--ion-color-light-shade);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.arm-select {
+  --placeholder-color: var(--ion-color-medium);
+  --placeholder-opacity: 0.6;
+  font-size: 1rem;
+}
+
 /* Notes section */
 .notes-container {
   margin: 24px 0;
@@ -230,7 +274,8 @@
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   .date-button,
-  .notes-textarea {
+  .notes-textarea,
+  .arm-selection-item {
     --background: var(--ion-color-step-100);
   }
   

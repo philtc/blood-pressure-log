@@ -6,6 +6,7 @@ type BloodPressureReading = {
   systolic: number;
   diastolic: number;
   pulse?: number;
+  arm?: string;
   notes?: string;
   date: string;
   timestamp: number;
@@ -67,12 +68,13 @@ class StorageService {
 
   async exportToCSV(): Promise<string> {
     const readings = await this.getReadings();
-    const headers = ['Date', 'Systolic', 'Diastolic', 'Pulse', 'Notes'];
+    const headers = ['Date', 'Systolic', 'Diastolic', 'Pulse', 'Arm', 'Notes'];
     const rows = readings.map(reading => [
       new Date(reading.timestamp).toISOString(),
       reading.systolic,
       reading.diastolic,
       reading.pulse || '',
+      reading.arm || '',
       reading.notes || ''
     ]);
     
@@ -109,6 +111,11 @@ class StorageService {
             const pulseIndex = headers.indexOf('pulse');
             if (pulseIndex !== -1 && values[pulseIndex]) {
               reading.pulse = parseInt(values[pulseIndex], 10);
+            }
+            
+            const armIndex = headers.indexOf('arm');
+            if (armIndex !== -1 && values[armIndex]) {
+              reading.arm = values[armIndex];
             }
             
             const notesIndex = headers.indexOf('notes');

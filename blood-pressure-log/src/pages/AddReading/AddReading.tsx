@@ -16,6 +16,9 @@ import {
   IonButtons,
   IonAlert,
   IonLoading,
+  IonSelect,
+  IonSelectOption,
+  IonCheckbox,
   useIonViewWillEnter,
   useIonViewDidLeave
 } from '@ionic/react';
@@ -44,6 +47,8 @@ const AddReading: React.FC = () => {
   const [systolic, setSystolic] = useState<number>(120);
   const [diastolic, setDiastolic] = useState<number>(80);
   const [pulse, setPulse] = useState<number | undefined>();
+  const [arm, setArm] = useState<string>('Not specified');
+  const [includePulse, setIncludePulse] = useState<boolean>(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [notes, setNotes] = useState<string>('');
   const [date, setDate] = useState<string>(new Date().toISOString());
@@ -167,6 +172,8 @@ const AddReading: React.FC = () => {
     setSystolic(120);
     setDiastolic(80);
     setPulse(undefined);
+    setArm('Not specified');
+    setIncludePulse(false);
     setNotes('');
     setDate(new Date().toISOString());
     setError(null);
@@ -183,8 +190,8 @@ const AddReading: React.FC = () => {
       return false;
     }
 
-    if (pulse !== undefined && (pulse < 30 || pulse > 200)) {
-      setError('Please enter a valid pulse value (30-200) or leave it empty');
+    if (includePulse && pulse !== undefined && (pulse < 30 || pulse > 200)) {
+      setError('Please enter a valid pulse value (30-200)');
       return false;
     }
 
@@ -206,7 +213,8 @@ const AddReading: React.FC = () => {
       await storageService.addReading({
         systolic,
         diastolic,
-        pulse: pulse || undefined,
+        pulse: includePulse ? pulse : undefined,
+        arm: arm !== 'Not specified' ? arm : undefined,
         notes: notes.trim() || undefined
       });
 
@@ -278,15 +286,31 @@ const AddReading: React.FC = () => {
               </div>
 
               <div className="pulse-container">
-                <ScrollPicker
-                  min={30}
-                  max={200}
-                  value={pulse || 72}
-                  onChange={(val) => setPulse(val)}
-                  label="Pulse"
-                  unit="bpm"
-                  color="secondary"
-                />
+                <IonItem lines="none" className="pulse-checkbox-item">
+                  <IonCheckbox
+                    checked={includePulse}
+                    onIonChange={e => {
+                      setIncludePulse(e.detail.checked);
+                      if (!e.detail.checked) {
+                        setPulse(undefined);
+                      } else if (pulse === undefined) {
+                        setPulse(72);
+                      }
+                    }}
+                  />
+                  <IonLabel className="ion-margin-start">Include Pulse Reading</IonLabel>
+                </IonItem>
+                {includePulse && (
+                  <ScrollPicker
+                    min={30}
+                    max={200}
+                    value={pulse || 72}
+                    onChange={(val) => setPulse(val)}
+                    label="Pulse"
+                    unit="bpm"
+                    color="secondary"
+                  />
+                )}
               </div>
             </div>
 
@@ -323,6 +347,23 @@ const AddReading: React.FC = () => {
                   />
                 </IonPopover>
               </div>
+            </div>
+
+            <div className="arm-selection-container">
+              <div className="arm-selection-label">Arm Used</div>
+              <IonItem lines="none" className="arm-selection-item">
+                <IonSelect
+                  value={arm}
+                  onIonChange={e => setArm(e.detail.value)}
+                  interface="popover"
+                  placeholder="Select arm"
+                  className="arm-select"
+                >
+                  <IonSelectOption value="Not specified">Not specified</IonSelectOption>
+                  <IonSelectOption value="Left">Left</IonSelectOption>
+                  <IonSelectOption value="Right">Right</IonSelectOption>
+                </IonSelect>
+              </IonItem>
             </div>
 
             <div className="notes-container">

@@ -30,13 +30,21 @@ const BloodPressureCard: React.FC<BloodPressureCardProps> = ({ reading, onDelete
       </IonCardHeader>
       
       <IonCardContent>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-          {reading.pulse && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '0.9rem', color: 'var(--ion-color-medium)' }}>Pulse:</span>
-              <span style={{ fontWeight: '600', color: 'var(--ion-text-color)' }}>{reading.pulse} bpm</span>
-            </div>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+            {reading.pulse && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '0.9rem', color: 'var(--ion-color-medium)' }}>Pulse:</span>
+                <span style={{ fontWeight: '600', color: 'var(--ion-text-color)' }}>{reading.pulse} bpm</span>
+              </div>
+            )}
+            {reading.arm && reading.arm !== 'Not specified' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '0.9rem', color: 'var(--ion-color-medium)' }}>Arm:</span>
+                <span style={{ fontWeight: '600', color: 'var(--ion-text-color)' }}>{reading.arm}</span>
+              </div>
+            )}
+          </div>
           {onDelete && (
             <IonButton 
               fill="clear" 
