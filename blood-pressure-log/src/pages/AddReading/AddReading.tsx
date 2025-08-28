@@ -23,23 +23,33 @@ import {
   useIonViewDidLeave
 } from '@ionic/react';
 import ScrollPicker from '../../components/ScrollPicker';
-import { checkmarkOutline, closeOutline, calendarOutline } from 'ionicons/icons';
+import { calendarOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import { close } from 'ionicons/icons';
 import { storageService } from '../../utils/storage';
 import './AddReading.css';
 // AdMob (only active on native platforms)
 import { Capacitor } from '@capacitor/core';
-// We avoid strict typing to prevent build errors if types change; the plugin API is called defensively.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let AdMob: any;
+
+// Dynamic AdMob import to avoid build errors and reduce web bundle size
+let AdMob: {
+  initialize?: () => Promise<void>;
+  addListener?: (event: string, callback: (info: { height: number }) => void) => { remove: () => void };
+  showBanner?: (options: {
+    adId: string;
+    adSize: string;
+    position: string;
+    margin: number;
+  }) => Promise<void>;
+  hideBanner?: () => Promise<void>;
+} | undefined;
+
 try {
   // Dynamically import to avoid impacting web bundle
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  AdMob = require('@capacitor-community/admob');
-  // Some versions export as default, others as named
-  AdMob = AdMob.AdMob || AdMob;
-} catch (e) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
+  const admobModule = require('@capacitor-community/admob') as typeof import('@capacitor-community/admob');
+  AdMob = admobModule.AdMob || admobModule;
+} catch {
   AdMob = undefined;
 }
 
@@ -121,9 +131,8 @@ const AddReading: React.FC = () => {
     void (async () => {
       try {
         // Initialize AdMob SDK
-        await AdMob.initialize();
+        await AdMob.initialize?.();
         // Listen for adaptive banner height to avoid covering buttons
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const sub = AdMob.addListener?.('bannerSizeChanged', (info: { height: number }) => {
           if (info && typeof info.height === 'number') setAdHeight(info.height);
         });
@@ -157,7 +166,7 @@ const AddReading: React.FC = () => {
         const sub = (window as any).__admob_sub__;
         if (sub && typeof sub.remove === 'function') sub.remove();
         setAdHeight(0);
-      } catch (e) {
+      } catch {
         // ignore
       }
     })();

@@ -22,7 +22,7 @@ import { useLocation } from 'react-router-dom';
 import './Menu.css';
 
 interface MenuProps {
-  // No props needed for now
+  onClose?: () => void;
 }
 
 const Menu: React.FC<MenuProps> = () => {

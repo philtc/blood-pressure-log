@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   IonContent, 
   IonHeader, 
@@ -21,7 +21,6 @@ import {
   IonBackButton
 } from '@ionic/react';
 import { downloadOutline, trashOutline } from 'ionicons/icons';
-import { useHistory } from 'react-router-dom';
 import { storageService, BloodPressureReading } from '../../utils/storage';
 import BloodPressureCard from '../../components/BloodPressureCard';
 import { format, subDays, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
@@ -35,9 +34,8 @@ const History: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
   const [showDeleteAllAlert, setShowDeleteAllAlert] = useState(false);
-  const history = useHistory();
 
-  const loadReadings = async () => {
+  const loadReadings = useCallback(async () => {
     try {
       const allReadings = await storageService.getReadings();
       // Sort by most recent first
@@ -49,15 +47,15 @@ const History: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
 
   useEffect(() => {
     loadReadings();
-  }, []);
+  }, [loadReadings]);
 
   useEffect(() => {
     applyTimeFilter(readings, timeRange);
-  }, [timeRange]);
+  }, [readings, timeRange]);
 
   useIonViewWillEnter(() => {
     loadReadings();

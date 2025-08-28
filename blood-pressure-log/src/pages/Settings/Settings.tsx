@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
-  IonButtons, IonBackButton, IonList, IonItem, IonLabel,
+  IonButtons, IonList, IonItem, IonLabel,
   IonToggle, IonButton, IonIcon, useIonToast, IonAlert,
   IonListHeader, IonNote
 } from '@ionic/react';
@@ -47,7 +47,7 @@ const Settings: React.FC = () => {
         duration: 2000,
         color: 'success'
       });
-    } catch (error) {
+    } catch {
       present({
         message: 'Failed to export data',
         duration: 2000,
@@ -55,8 +55,6 @@ const Settings: React.FC = () => {
       });
     }
   };
-
-  const confirmDelete = () => setShowDeleteAlert(true);
 
   const deleteAllData = async () => {
     try {
@@ -66,7 +64,7 @@ const Settings: React.FC = () => {
         duration: 2000,
         color: 'success'
       });
-    } catch (error) {
+    } catch {
       present({
         message: 'Failed to delete data',
         duration: 2000,
@@ -85,7 +83,7 @@ const Settings: React.FC = () => {
           duration: 2000,
           color: 'success'
         });
-      } catch (error) {
+      } catch {
         present({
           message: 'Failed to import data',
           duration: 2000,
