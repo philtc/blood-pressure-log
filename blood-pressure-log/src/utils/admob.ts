@@ -29,7 +29,15 @@ class AdMobService {
   }
 
   async initialize(): Promise<void> {
-    if (!Capacitor.isNativePlatform() || !AdMob) return;
+    if (!Capacitor.isNativePlatform()) {
+      console.log('AdMob: Not on native platform, skipping initialization');
+      return;
+    }
+    
+    if (!AdMob) {
+      console.warn('AdMob: AdMob module not available');
+      return;
+    }
     
     try {
       // Only initialize once
@@ -38,16 +46,26 @@ class AdMobService {
         return;
       }
       
+      console.log('AdMob: Initializing...');
       const result = await AdMob.initialize?.();
       console.log('AdMob initialized successfully', result);
       this.isInitialized = true;
     } catch (error) {
-      console.warn('AdMob initialization failed:', error);
+      console.error('AdMob initialization failed:', error);
+      throw error;
     }
   }
 
   async showBanner(): Promise<number> {
-    if (!Capacitor.isNativePlatform() || !AdMob) return 0;
+    if (!Capacitor.isNativePlatform()) {
+      console.log('AdMob: Not on native platform, returning 0 height');
+      return 0;
+    }
+    
+    if (!AdMob) {
+      console.warn('AdMob: AdMob module not available, returning 0 height');
+      return 0;
+    }
     
     // Ensure AdMob is initialized first
     if (!this.isInitialized) {
@@ -88,8 +106,14 @@ class AdMobService {
       }
 
       // Show bottom adaptive banner with improved error handling
+      // Use test ad unit ID for development (replace with your real ad unit ID for production)
+      const isDev = import.meta.env.DEV || window.location.hostname === 'localhost';
+      const adId = isDev ? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-2130614856218928/8934846232';
+      
+      console.log('AdMob: Attempting to show banner with ad ID:', adId, 'isDev:', isDev);
+      
       const bannerResult = await AdMob.showBanner?.({
-        adId: 'ca-app-pub-2130614856218928/8934846232',
+        adId,
         adSize: 'ADAPTIVE_BANNER',
         position: 'BOTTOM_CENTER',
         margin: 0,
