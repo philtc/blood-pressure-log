@@ -79,10 +79,12 @@ const Trends: React.FC = () => {
     const filtered = readings
       .filter((reading) => {
         try {
-          return isWithinInterval(new Date(reading.timestamp), {
+          const readingDate = new Date(reading.timestamp);
+          const result = isWithinInterval(readingDate, {
             start: startDate,
             end: endOfDay(now)
           });
+          return result;
         } catch (e) {
           console.error('Error processing reading:', reading, e);
           return false;
@@ -91,6 +93,7 @@ const Trends: React.FC = () => {
       .sort((a, b) => a.timestamp - b.timestamp);
 
     console.log(`Filtered ${filtered.length} readings for ${timeRange} time range`);
+    console.log(`Time range: ${timeRange}, Start date: ${startDate}, Now: ${now}`);
     return filtered;
   }, [readings, timeRange]);
 
@@ -239,7 +242,11 @@ const Trends: React.FC = () => {
         <IonToolbar className="ion-no-padding">
           <IonSegment 
             value={timeRange} 
-            onIonChange={e => setTimeRange(e.detail.value as TimeRange)}
+            onIonChange={e => {
+              const newValue = e.detail.value as TimeRange;
+              console.log('Time range changed to:', newValue);
+              setTimeRange(newValue);
+            }}
             scrollable
             style={{
               '--background': 'var(--ion-color-light)',

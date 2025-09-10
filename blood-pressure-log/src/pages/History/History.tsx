@@ -18,13 +18,16 @@ import {
   IonListHeader,
   IonAlert,
   useIonViewWillEnter,
-  IonBackButton
+  IonBackButton,
+  useIonToast
 } from '@ionic/react';
 import { downloadOutline, trashOutline } from 'ionicons/icons';
 import { storageService, BloodPressureReading } from '../../utils/storage';
 import BloodPressureCard from '../../components/BloodPressureCard';
 import { format, subDays, startOfDay, endOfDay, isWithinInterval } from 'date-fns';
 import './History.css';
+import { useHistory } from 'react-router-dom';
+import { Share } from '@capacitor/share';
 
 type TimeRange = 'all' | 'today' | 'week' | 'month' | '3months' | 'year';
 
@@ -34,6 +37,8 @@ const History: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRange>('month');
   const [showDeleteAllAlert, setShowDeleteAllAlert] = useState(false);
+  const [present] = useIonToast();
+  const history = useHistory();
 
   const loadReadings = useCallback(async () => {
     try {
@@ -109,17 +114,27 @@ const History: React.FC = () => {
   const handleExport = async () => {
     try {
       const csvContent = await storageService.exportToCSV();
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', `blood-pressure-${format(new Date(), 'yyyy-MM-dd')}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      const fileName = `blood-pressure-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+      
+      // Use the Share plugin to share the CSV content
+      await Share.share({
+        title: fileName,
+        text: csvContent,
+        dialogTitle: 'Export Blood Pressure Data'
+      });
+      
+      present({
+        message: 'Blood pressure data export initiated. Choose an app to save the file.',
+        duration: 4000,
+        color: 'success'
+      });
     } catch (error) {
       console.error('Error exporting data:', error);
+      present({
+        message: 'Failed to export data. Please try again.',
+        duration: 4000,
+        color: 'danger'
+      });
     }
   };
 
@@ -147,6 +162,10 @@ const History: React.FC = () => {
     } catch (error) {
       console.error('Error deleting reading:', error);
     }
+  };
+
+  const handleEditReading = (reading: BloodPressureReading) => {
+    history.push(`/edit/${reading.id}`);
   };
 
   const getReadingDate = (timestamp: number) => {
@@ -243,6 +262,7 @@ const History: React.FC = () => {
                   <BloodPressureCard 
                     reading={reading} 
                     onDelete={handleDeleteReading} 
+                    onEdit={handleEditReading}
                   />
                 </div>
               ))}

@@ -97,23 +97,8 @@ const AddReading: React.FC = () => {
     loadLastReading();
   }, [id]);
 
-  // Load last reading and theme preference when component mounts
+  // Load theme preference when component mounts
   useIonViewWillEnter(() => {
-    const loadLastReading = async () => {
-      try {
-        const readings = await storageService.getReadings();
-        if (readings.length > 0) {
-          const lastReading = readings[0];
-          setSystolic(lastReading.systolic);
-          setDiastolic(lastReading.diastolic);
-          if (lastReading.pulse) setPulse(lastReading.pulse);
-        }
-      } catch (error) {
-        console.error('Error loading last values:', error);
-      }
-    };
-
-    loadLastReading();
     // Check for dark mode preference
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     setIsDarkMode(prefersDark.matches);

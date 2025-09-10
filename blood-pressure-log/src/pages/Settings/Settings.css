@@ -54,6 +54,16 @@ ion-item[color="danger"] ion-icon {
   color: var(--ion-color-danger);
 }
 
+/* Version info at the bottom */
+.version-info {
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.version-info small {
+  font-size: 0.8rem;
+}
+
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   ion-item {

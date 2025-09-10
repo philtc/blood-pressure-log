@@ -3,12 +3,13 @@ import {
   IonContent, IonHeader, IonPage, IonTitle, IonToolbar, 
   IonButtons, IonList, IonItem, IonLabel,
   IonToggle, IonButton, IonIcon, useIonToast, IonAlert,
-  IonListHeader, IonNote
+  IonListHeader, IonNote, IonInput, IonText
 } from '@ionic/react';
 import { moon, sunny, trashOutline, downloadOutline, cloudUploadOutline, arrowBack } from 'ionicons/icons';
 import { storageService } from '../../utils/storage';
 import { Preferences } from '@capacitor/preferences';
 import { useHistory } from 'react-router-dom';
+import { Share } from '@capacitor/share';
 import './Settings.css';
 
 const Settings: React.FC = () => {
@@ -36,22 +37,24 @@ const Settings: React.FC = () => {
   const exportData = async () => {
     try {
       const csv = await storageService.exportToCSV();
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `blood-pressure-export-${new Date().toISOString().slice(0, 10)}.csv`;
-      link.click();
-      URL.revokeObjectURL(url);
+      const fileName = `blood-pressure-export-${new Date().toISOString().slice(0, 10)}.csv`;
+      
+      // Use the Share plugin to share the CSV content
+      await Share.share({
+        title: fileName,
+        text: csv,
+        dialogTitle: 'Export Blood Pressure Data'
+      });
+      
       present({
-        message: 'Data exported successfully',
-        duration: 2000,
+        message: 'Blood pressure data export initiated. Choose an app to save the file.',
+        duration: 4000,
         color: 'success'
       });
     } catch {
       present({
-        message: 'Failed to export data',
-        duration: 2000,
+        message: 'Failed to export data. Please try again.',
+        duration: 4000,
         color: 'danger'
       });
     }
@@ -200,6 +203,12 @@ const Settings: React.FC = () => {
             { text: 'Delete', handler: deleteAllData, cssClass: 'danger' }
           ]}
         />
+
+        <div className="ion-text-center ion-padding version-info">
+          <IonText color="medium">
+            <small>Version 1.0.5</small>
+          </IonText>
+        </div>
       </IonContent>
     </IonPage>
   );
