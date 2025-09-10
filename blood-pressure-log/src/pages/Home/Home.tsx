@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonPage, IonButtons, IonButton, IonIcon, IonMenuButton, useIonViewWillEnter } from '@ionic/react';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonPage, IonButtons, IonButton, IonIcon, IonMenuButton, useIonViewWillEnter, useIonViewDidLeave } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import BloodPressureCard from '../../components/BloodPressureCard';
 import { storageService, BloodPressureReading } from '../../utils/storage';
+import { admobService } from '../../utils/admob';
 import './Home.css';
 
 const Home: React.FC = () => {
   const history = useHistory();
   const [latest, setLatest] = useState<BloodPressureReading | null>(null);
+  const [adHeight, setAdHeight] = useState<number>(0);
 
   const goToAdd = () => history.push('/add');
 
@@ -28,6 +30,35 @@ const Home: React.FC = () => {
 
   useIonViewWillEnter(() => {
     loadLatest();
+    
+    // AdMob setup with improved error handling
+    void (async () => {
+      try {
+        // Initialize AdMob service if not already initialized
+        await admobService.initialize();
+        
+        // Show bottom adaptive banner
+        const height = await admobService.showBanner();
+        setAdHeight(height);
+        console.log('AdMob banner shown with height:', height);
+      } catch (err) {
+        console.warn('AdMob banner failed to show:', err);
+        setAdHeight(0);
+      }
+    })();
+  });
+
+  useIonViewDidLeave(() => {
+    // Hide banner when leaving the page
+    void (async () => {
+      try {
+        await admobService.hideBanner();
+        setAdHeight(0);
+      } catch (err) {
+        console.warn('AdMob banner failed to hide:', err);
+        setAdHeight(0);
+      }
+    })();
   });
 
   return (
@@ -45,7 +76,7 @@ const Home: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding" style={{ paddingBottom: adHeight ? adHeight + 16 : 16 }}>
         <div className="content-container">
           {latest ? (
             <div className="latest-reading">
@@ -73,7 +104,6 @@ const Home: React.FC = () => {
       </IonContent>
     </IonPage>
   );
-}
-;
+};
 
 export default Home;

@@ -117,6 +117,7 @@ const History: React.FC = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Error exporting data:', error);
     }
@@ -238,13 +239,13 @@ const History: React.FC = () => {
                 </IonListHeader>
                 
                 {group.items.map((reading) => (
-                  <div key={reading.id} className="reading-item">
-                    <BloodPressureCard 
-                      reading={reading} 
-                      onDelete={handleDeleteReading} 
-                    />
-                  </div>
-                ))}
+                <div key={reading.id} className="reading-item">
+                  <BloodPressureCard 
+                    reading={reading} 
+                    onDelete={handleDeleteReading} 
+                  />
+                </div>
+              ))}
               </div>
             ))}
           </div>

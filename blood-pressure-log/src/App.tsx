@@ -1,5 +1,7 @@
 import { setupIonicReact, isPlatform, IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import { Capacitor } from '@capacitor/core';
+import { Preferences } from '@capacitor/preferences';
 
 /* Components */
 import Layout from './components/Layout/Layout';
@@ -25,6 +27,37 @@ setupIonicReact({
   mode: 'md', // Force material design for consistent look
   hardwareBackButton: isPlatform('android') ? true : false,
 });
+
+// Initialize theme based on saved preference
+const initializeTheme = async () => {
+  try {
+    const { value } = await Preferences.get({ key: 'darkMode' });
+    const isDarkMode = value === 'true';
+    document.body.classList.toggle('dark', isDarkMode);
+  } catch (error) {
+    console.warn('Failed to load theme preference:', error);
+  }
+};
+
+// Initialize theme on app startup
+initializeTheme();
+
+// Initialize AdMob on native platforms with improved error handling
+if (Capacitor.isNativePlatform()) {
+  import('@capacitor-community/admob')
+    .then(async (admob) => {
+      try {
+        const AdMob = admob.AdMob || admob;
+        // Add a small delay to ensure the app is fully ready
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const result = await AdMob.initialize();
+        console.log('AdMob initialized successfully', result);
+      } catch (error) {
+        console.warn('AdMob initialization failed:', error);
+      }
+    })
+    .catch((error) => console.warn('AdMob plugin not available:', error));
+}
 
 const App: React.FC = () => {
 

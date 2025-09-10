@@ -14,7 +14,7 @@ type BloodPressureReading = {
 
 class StorageService {
   private store: Storage | null = null;
-  private readonly STORAGE_KEY = 'bp_readings';
+  public readonly STORAGE_KEY = 'bp_readings';
 
   constructor() {
     this.init();
@@ -45,6 +45,22 @@ class StorageService {
     
     await this.store?.set(this.STORAGE_KEY, [...readings, newReading]);
     return newReading;
+  }
+
+  async updateReading(id: string, reading: Omit<BloodPressureReading, 'id' | 'date' | 'timestamp'>, timestamp?: number) {
+    if (!this.store) await this.init();
+    
+    const readings = await this.getReadings();
+    const updatedReading: BloodPressureReading = {
+      ...reading,
+      id,
+      date: format(new Date(timestamp || Date.now()), 'yyyy-MM-dd'),
+      timestamp: timestamp || Date.now(),
+    };
+    
+    const filteredReadings = readings.filter(r => r.id !== id);
+    await this.store?.set(this.STORAGE_KEY, [...filteredReadings, updatedReading]);
+    return updatedReading;
   }
 
   async getReadings(): Promise<BloodPressureReading[]> {

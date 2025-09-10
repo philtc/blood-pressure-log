@@ -1,10 +1,28 @@
-/* AddReading page styles */
+/* AddReading page styles - Material 3 Expressive Design */
 
-/* Main container */
+/* Header button padding to avoid status bar interference */
+ion-header ion-buttons[slot="start"] ion-button,
+ion-header ion-buttons[slot="end"] ion-button {
+  margin-top: max(8px, env(safe-area-inset-top));
+  padding-top: max(4px, env(safe-area-inset-top));
+}
+
+ion-header {
+  padding-top: var(--ion-statusbar-padding);
+  padding-top: env(safe-area-inset-top);
+}
+
+ion-toolbar {
+  padding-top: var(--ion-statusbar-padding);
+  padding-top: env(safe-area-inset-top);
+  min-height: calc(56px + var(--ion-statusbar-padding));
+}
+
+/* Main container with reduced whitespace */
 .reading-form {
   max-width: 800px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 12px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -15,8 +33,8 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 24px;
-  margin: 24px 0;
+  gap: 16px;
+  margin: 16px 0;
   flex-wrap: wrap;
 }
 
@@ -24,32 +42,30 @@
 .blood-pressure-inputs {
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 6px;
 }
 
 /* Divider between systolic and diastolic */
 .divider {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: var(--ion-color-medium);
   line-height: 1;
-  margin-bottom: 30px;
-  padding: 0 8px;
+  margin-bottom: 24px;
+  padding: 0 6px;
 }
-
-/* Status indicator has been removed */
 
 /* Pulse input */
 .pulse-container {
-  min-width: 120px;
-  margin-left: 16px;
+  min-width: 100px;
+  margin-left: 12px;
   position: relative;
 }
 
 .pulse-container::before {
   content: '';
   position: absolute;
-  left: -16px;
+  left: -12px;
   top: 50%;
   transform: translateY(-50%);
   height: 60%;
@@ -59,36 +75,36 @@
 
 /* Date picker */
 .date-picker-item {
-  margin: 24px 0;
+  margin: 16px 0;
   text-align: center;
 }
 
 .date-picker-label {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--ion-color-medium);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: 500;
 }
 
 .date-button {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
   --border-radius: 12px;
   --background: var(--ion-color-light);
   --color: var(--ion-text-color);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   height: auto;
   margin: 0 auto;
   text-transform: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 .date-display {
   display: inline-block;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 .calendar-icon {
@@ -101,87 +117,87 @@
   --padding-start: 0;
   --padding-end: 0;
   --inner-padding-end: 0;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 /* Arm selection */
 .arm-selection-container {
-  margin: 24px 0;
+  margin: 16px 0;
 }
 
 .arm-selection-label {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--ion-color-medium);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: 500;
 }
 
 .arm-selection-item {
   --background: var(--ion-color-light);
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
   --border-radius: 12px;
   --inner-padding-end: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
 .arm-selection-item:focus-within {
   --background: var(--ion-color-light-shade);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .arm-select {
   --placeholder-color: var(--ion-color-medium);
   --placeholder-opacity: 0.6;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 /* Notes section */
 .notes-container {
-  margin: 24px 0;
+  margin: 16px 0;
 }
 
 .notes-label {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--ion-color-medium);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: 500;
 }
 
 .notes-textarea {
   --background: var(--ion-color-light);
   --color: var(--ion-text-color);
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   --placeholder-color: var(--ion-color-medium);
   --placeholder-opacity: 0.6;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
 .notes-textarea:focus-within {
   --background: var(--ion-color-light-shade);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Form actions */
 .form-actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
 }
 
 /* Submit button container */
 .submit-button-container {
-  margin: 32px 0;
-  padding: 0 16px;
+  margin: 24px 0;
+  padding: 0 12px;
   width: 100%;
 }
 
@@ -189,22 +205,22 @@
 .submit-button,
 .cancel-button {
   --border-radius: 12px;
-  --padding-top: 20px;
-  --padding-bottom: 20px;
-  --padding-start: 24px;
-  --padding-end: 24px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --padding-start: 20px;
+  --padding-end: 20px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   text-transform: none;
   transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
-  height: 56px;
+  height: 48px;
   margin: 0;
   flex: 1;
 }
 
 /* Submit button specific */
 .submit-button {
-  --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.2);
+  --box-shadow: 0 2px 6px rgba(var(--ion-color-primary-rgb), 0.2);
 }
 
 /* Cancel button specific */
@@ -214,7 +230,7 @@
   --border-style: solid;
   --border-width: 1px;
   --border-color: var(--ion-color-medium-shade);
-  --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Button active states */
@@ -224,11 +240,11 @@
 }
 
 .submit-button:active {
-  --box-shadow: 0 2px 6px rgba(var(--ion-color-primary-rgb), 0.2);
+  --box-shadow: 0 1px 3px rgba(var(--ion-color-primary-rgb), 0.2);
 }
 
 .cancel-button:active {
-  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Disabled states */
@@ -236,34 +252,6 @@
 .cancel-button:disabled {
   --opacity: 0.7;
   --box-shadow: none;
-}
-
-/* Submit button */
-.submit-button-container {
-  margin: 32px 0;
-  padding: 0 16px;
-}
-
-.submit-button {
-  --border-radius: 12px;
-  --padding-top: 20px;
-  --padding-bottom: 20px;
-  --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.2);
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-transform: none;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-}
-
-.submit-button:hover {
-  --box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.3);
-  transform: translateY(-2px);
-}
-
-.submit-button:active {
-  --box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.2);
-  transform: translateY(0);
 }
 
 .button-spinner {
@@ -280,51 +268,50 @@
   }
   
   .submit-button {
-    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   }
   
   .submit-button:hover {
-    --box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    --box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
   }
   
   .submit-button:active {
-    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Status indicator styles removed */
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .form-actions {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
   
   .submit-button,
   .cancel-button {
     width: 100%;
   }
+  
   .input-row {
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
   }
   
   .blood-pressure-inputs {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   
   .pulse-container {
     margin-left: 0;
-    margin-top: 16px;
+    margin-top: 12px;
   }
   
   .pulse-container::before {
     content: '';
     position: absolute;
     left: 50%;
-    top: -12px;
+    top: -10px;
     transform: translateX(-50%);
     width: 60%;
     height: 1px;
@@ -332,13 +319,11 @@
   }
   
   .divider {
-    margin: 8px 0;
+    margin: 6px 0;
     transform: rotate(90deg);
   }
   
   .scroll-picker {
-    min-width: 140px;
+    min-width: 120px;
   }
 }
-
-/* Animation for status change removed */

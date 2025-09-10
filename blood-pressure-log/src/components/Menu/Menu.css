@@ -11,6 +11,17 @@ ion-menu ion-content {
   /* Follow current theme */
   --background: var(--ion-background-color);
   --color: var(--ion-text-color);
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Ensure proper padding for menu header to avoid status bar obstruction */
+ion-menu ion-header {
+  padding-top: env(safe-area-inset-top);
+}
+
+ion-menu ion-toolbar {
+  --padding-top: env(safe-area-inset-top);
+  --min-height: calc(56px + env(safe-area-inset-top));
 }
 
 /* Ensure shadow parts also inherit the background */
@@ -34,6 +45,7 @@ ion-menu ion-content::part(content) {
 
 ion-menu ion-list {
   background: transparent;
+  margin-top: env(safe-area-inset-top);
 }
 
 ion-menu ion-item {

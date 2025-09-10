@@ -1,6 +1,7 @@
-/* Custom color palette */
+/* Material 3 theme variables with expressive design */
+
 :root {
-  /* Base palette (light theme by default) */
+  /* Material 3 color palette (light theme by default) */
   --ion-color-primary: #78DCE8;
   --ion-color-primary-rgb: 120, 220, 232;
   --ion-color-primary-contrast: #000000;
@@ -43,7 +44,7 @@
   --ion-color-light-shade: #ededed;
   --ion-color-light-tint: #ffffff;
 
-  /* Light theme surface & text */
+  /* Light theme surface & text with Material 3 elevation */
   --ion-background-color: #ffffff;
   --ion-background-color-rgb: 255, 255, 255;
   --ion-text-color: #000000;
@@ -55,11 +56,20 @@
   --ion-item-border-color: #e0e0e0;
   --ion-card-background: #ffffff;
 
+  /* Material 3 elevation shadows */
+  --ion-card-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --ion-card-box-shadow-hover: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  
   /* Custom accents (explicit palette mapping) */
   --myblue: #78DCE8;         /* color-blue-dark */
   --myblue-rgb: 120, 220, 232;
   --myorange: #FFD866;       /* color-orange-dark */
   --myorange-rgb: 255, 216, 102;
+  
+  /* Material 3 rounded corners */
+  --ion-border-radius: 12px;
+  --ion-border-radius-small: 8px;
+  --ion-border-radius-large: 16px;
 }
 
 /* Dark theme overrides when body has .dark */
@@ -97,9 +107,29 @@
   --ion-item-border-color: var(--ion-color-medium);
   --ion-card-background: var(--ion-color-light);
 
+  /* Material 3 elevation shadows for dark mode */
+  --ion-card-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --ion-card-box-shadow-hover: 0 3px 6px rgba(0, 0, 0, 0.4), 0 3px 6px rgba(0, 0, 0, 0.3);
+
   /* Custom accents remain the same in dark mode */
   --myblue: #78DCE8;
   --myblue-rgb: 120, 220, 232;
   --myorange: #FFD866;
   --myorange-rgb: 255, 216, 102;
+}
+
+/* Material 3 typography */
+:root {
+  --ion-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --ion-font-size-xs: 0.75rem;
+  --ion-font-size-sm: 0.875rem;
+  --ion-font-size-md: 1rem;
+  --ion-font-size-lg: 1.125rem;
+  --ion-font-size-xl: 1.25rem;
+  --ion-font-size-xxl: 1.5rem;
+  --ion-font-weight-light: 300;
+  --ion-font-weight-normal: 400;
+  --ion-font-weight-medium: 500;
+  --ion-font-weight-semibold: 600;
+  --ion-font-weight-bold: 700;
 }

@@ -42,6 +42,7 @@ const Settings: React.FC = () => {
       link.href = url;
       link.download = `blood-pressure-export-${new Date().toISOString().slice(0, 10)}.csv`;
       link.click();
+      URL.revokeObjectURL(url);
       present({
         message: 'Data exported successfully',
         duration: 2000,

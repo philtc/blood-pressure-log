@@ -1,5 +1,23 @@
 /* History page styles */
 
+/* Header button padding to avoid status bar interference */
+ion-header ion-buttons[slot="start"] ion-back-button,
+ion-header ion-buttons[slot="end"] ion-button {
+  margin-top: max(8px, env(safe-area-inset-top));
+  padding-top: max(4px, env(safe-area-inset-top));
+}
+
+ion-header {
+  padding-top: var(--ion-statusbar-padding);
+  padding-top: env(safe-area-inset-top);
+}
+
+ion-toolbar {
+  padding-top: var(--ion-statusbar-padding);
+  padding-top: env(safe-area-inset-top);
+  min-height: calc(56px + var(--ion-statusbar-padding));
+}
+
 .filter-toolbar {
   --background: transparent;
   --padding-start: 16px;

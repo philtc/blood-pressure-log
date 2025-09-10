@@ -20,6 +20,7 @@ const Layout: React.FC = () => {
           <Route exact path="/" render={() => <Redirect to="/home" />} />
           <Route exact path="/home" component={Home} />
           <Route exact path="/add" component={AddReading} />
+          <Route exact path="/edit/:id" component={AddReading} />
           <Route exact path="/history" component={History} />
           <Route exact path="/trends" component={Trends} />
           <Route exact path="/settings" component={Settings} />

@@ -23,34 +23,14 @@ import {
   useIonViewDidLeave
 } from '@ionic/react';
 import ScrollPicker from '../../components/ScrollPicker';
-import { calendarOutline } from 'ionicons/icons';
-import { useHistory } from 'react-router-dom';
-import { close } from 'ionicons/icons';
-import { storageService } from '../../utils/storage';
+import { calendarOutline, close } from 'ionicons/icons';
+import { useHistory, useParams } from 'react-router-dom';
+import { storageService, BloodPressureReading } from '../../utils/storage';
+import { admobService } from '../../utils/admob';
 import './AddReading.css';
-// AdMob (only active on native platforms)
-import { Capacitor } from '@capacitor/core';
 
-// Dynamic AdMob import to avoid build errors and reduce web bundle size
-let AdMob: {
-  initialize?: () => Promise<void>;
-  addListener?: (event: string, callback: (info: { height: number }) => void) => { remove: () => void };
-  showBanner?: (options: {
-    adId: string;
-    adSize: string;
-    position: string;
-    margin: number;
-  }) => Promise<void>;
-  hideBanner?: () => Promise<void>;
-} | undefined;
-
-try {
-  // Dynamically import to avoid impacting web bundle
-  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-  const admobModule = require('@capacitor-community/admob') as typeof import('@capacitor-community/admob');
-  AdMob = admobModule.AdMob || admobModule;
-} catch {
-  AdMob = undefined;
+interface RouteParams {
+  id?: string;
 }
 
 const AddReading: React.FC = () => {
@@ -67,31 +47,55 @@ const AddReading: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [adHeight, setAdHeight] = useState<number>(0);
+  const [editingReading, setEditingReading] = useState<BloodPressureReading | null>(null);
   const history = useHistory();
+  const { id } = useParams<RouteParams>();
   const dateButtonRef = useRef<HTMLIonButtonElement>(null);
 
   const handleCancel = () => {
-    history.push('/home');
+    if (editingReading) {
+      // Replace the current history entry to avoid the back button loop
+      history.replace('/history');
+    } else {
+      history.push('/home');
+    }
   };
 
   // Load last reading and theme preference when component mounts
   useEffect(() => {
     const loadLastReading = async () => {
       try {
-        const readings = await storageService.getReadings();
-        if (readings.length > 0) {
-          const lastReading = readings[0];
-          setSystolic(lastReading.systolic);
-          setDiastolic(lastReading.diastolic);
-          if (lastReading.pulse) setPulse(lastReading.pulse);
+        // If we're editing, load the specific reading
+        if (id) {
+          const readings = await storageService.getReadings();
+          const readingToEdit = readings.find(r => r.id === id);
+          if (readingToEdit) {
+            setEditingReading(readingToEdit);
+            setSystolic(readingToEdit.systolic);
+            setDiastolic(readingToEdit.diastolic);
+            setPulse(readingToEdit.pulse);
+            setArm(readingToEdit.arm || 'Not specified');
+            setIncludePulse(!!readingToEdit.pulse);
+            setNotes(readingToEdit.notes || '');
+            setDate(new Date(readingToEdit.timestamp).toISOString());
+          }
+        } else {
+          // Load last reading for new entry
+          const readings = await storageService.getReadings();
+          if (readings.length > 0) {
+            const lastReading = readings[0];
+            setSystolic(lastReading.systolic);
+            setDiastolic(lastReading.diastolic);
+            if (lastReading.pulse) setPulse(lastReading.pulse);
+          }
         }
       } catch (error) {
-        console.error('Error loading last values:', error);
+        console.error('Error loading reading data:', error);
       }
     };
 
     loadLastReading();
-  }, []);
+  }, [id]);
 
   // Load last reading and theme preference when component mounts
   useIonViewWillEnter(() => {
@@ -127,30 +131,12 @@ const AddReading: React.FC = () => {
 
   // AdMob setup only on native platforms and only on this page
   useIonViewWillEnter(() => {
-    if (!Capacitor.isNativePlatform() || !AdMob) return;
+    if (!admobService) return;
     void (async () => {
       try {
-        // Initialize AdMob SDK
-        await AdMob.initialize?.();
-        // Listen for adaptive banner height to avoid covering buttons
-        const sub = AdMob.addListener?.('bannerSizeChanged', (info: { height: number }) => {
-          if (info && typeof info.height === 'number') setAdHeight(info.height);
-        });
-
         // Show bottom adaptive banner
-        await AdMob.showBanner?.({
-          adId: 'ca-app-pub-2130614856218928/8934846232',
-          adSize: 'ADAPTIVE_BANNER',
-          position: 'BOTTOM_CENTER',
-          margin: 0,
-        });
-
-        // Fallback padding in case event doesn't fire immediately
-        setTimeout(() => setAdHeight((h) => (h > 0 ? h : 60)), 500);
-
-        // Store unsubscribe on ref for cleanup
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).__admob_sub__ = sub;
+        const height = await admobService.showBanner();
+        setAdHeight(height);
       } catch (err) {
         console.warn('AdMob banner failed to show:', err);
       }
@@ -161,10 +147,7 @@ const AddReading: React.FC = () => {
     // Hide banner when leaving the page
     void (async () => {
       try {
-        if (AdMob?.hideBanner) await AdMob.hideBanner();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const sub = (window as any).__admob_sub__;
-        if (sub && typeof sub.remove === 'function') sub.remove();
+        await admobService.hideBanner();
         setAdHeight(0);
       } catch {
         // ignore
@@ -219,21 +202,38 @@ const AddReading: React.FC = () => {
     setError(null);
 
     try {
-      await storageService.addReading({
+      const readingData = {
         systolic,
         diastolic,
         pulse: includePulse ? pulse : undefined,
         arm: arm !== 'Not specified' ? arm : undefined,
         notes: notes.trim() || undefined
-      });
+      };
+
+      if (editingReading) {
+        // Update existing reading
+        await storageService.updateReading(editingReading.id, readingData, new Date(date).getTime());
+        // Replace the current history entry to avoid the back button loop
+        history.replace('/history');
+      } else {
+        // Add new reading
+        await storageService.addReading(readingData);
+        // Navigate back to home
+        history.push('/home');
+      }
 
       setShowSuccess(true);
       // Reset form after successful submission
       resetForm();
-      // Navigate back to home after a short delay
+      // Navigate back to appropriate page after a short delay
       setTimeout(() => {
         setShowSuccess(false);
-        history.push('/home');
+        if (editingReading) {
+          // Replace the current history entry to avoid the back button loop
+          history.replace('/history');
+        } else {
+          history.push('/home');
+        }
       }, 1500);
     } catch (err) {
       console.error('Error saving reading:', err);
@@ -265,10 +265,10 @@ const AddReading: React.FC = () => {
               <IonIcon slot="icon-only" icon={close} />
             </IonButton>
           </IonButtons>
-          <IonTitle className="app-title">Add Reading</IonTitle>
+          <IonTitle className="app-title">{editingReading ? 'Edit Reading' : 'Add Reading'}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding" style={{ paddingBottom: adHeight ? adHeight + 12 : undefined }}>
+      <IonContent className="ion-padding" style={{ paddingBottom: adHeight ? adHeight + 20 : 20 }}>
         <form onSubmit={(e) => e.preventDefault()} className="reading-form">
           <div className="reading-inputs">
             <div className="input-row">
@@ -406,7 +406,7 @@ const AddReading: React.FC = () => {
                 {isLoading ? (
                   <IonSpinner name="crescent" />
                 ) : (
-                  'Save Reading'
+                  editingReading ? 'Update Reading' : 'Save Reading'
                 )}
               </IonButton>
             </div>
@@ -417,7 +417,7 @@ const AddReading: React.FC = () => {
           isOpen={showSuccess}
           onDidDismiss={() => setShowSuccess(false)}
           header="Success"
-          message="Blood pressure reading saved successfully!"
+          message={editingReading ? "Blood pressure reading updated successfully!" : "Blood pressure reading saved successfully!"}
           buttons={['OK']}
         />
 

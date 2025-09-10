@@ -8,16 +8,17 @@ import {
   IonButton,
   IonIcon 
 } from '@ionic/react';
-import { trashOutline } from 'ionicons/icons';
+import { trashOutline, createOutline } from 'ionicons/icons';
 import { format } from 'date-fns';
 import { BloodPressureReading } from '../utils/storage';
 
 interface BloodPressureCardProps {
   reading: BloodPressureReading;
   onDelete?: (id: string) => void;
+  onEdit?: (reading: BloodPressureReading) => void;
 }
 
-const BloodPressureCard: React.FC<BloodPressureCardProps> = ({ reading, onDelete }) => {
+const BloodPressureCard: React.FC<BloodPressureCardProps> = ({ reading, onDelete, onEdit }) => {
   const formattedDate = format(new Date(reading.timestamp), 'MMM d, yyyy h:mm a');
 
   return (
@@ -45,16 +46,28 @@ const BloodPressureCard: React.FC<BloodPressureCardProps> = ({ reading, onDelete
               </div>
             )}
           </div>
-          {onDelete && (
-            <IonButton 
-              fill="clear" 
-              color="medium" 
-              onClick={() => onDelete(reading.id)}
-              style={{ '--padding-start': '8px', '--padding-end': '8px', marginLeft: 'auto' }}
-            >
-              <IonIcon slot="icon-only" icon={trashOutline} />
-            </IonButton>
-          )}
+          <div style={{ display: 'flex', gap: '4px' }}>
+            {onEdit && (
+              <IonButton 
+                fill="clear" 
+                color="primary" 
+                onClick={() => onEdit(reading)}
+                style={{ '--padding-start': '8px', '--padding-end': '8px' }}
+              >
+                <IonIcon slot="icon-only" icon={createOutline} />
+              </IonButton>
+            )}
+            {onDelete && (
+              <IonButton 
+                fill="clear" 
+                color="medium" 
+                onClick={() => onDelete(reading.id)}
+                style={{ '--padding-start': '8px', '--padding-end': '8px' }}
+              >
+                <IonIcon slot="icon-only" icon={trashOutline} />
+              </IonButton>
+            )}
+          </div>
         </div>
         {reading.notes && (
           <div style={{ marginTop: '12px', fontSize: '0.9rem' }}>

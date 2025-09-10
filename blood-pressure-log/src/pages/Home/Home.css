@@ -1,8 +1,24 @@
-/* Custom styles for the Home page */
+/* Custom styles for the Home page - Material 3 Expressive Design */
 
-/* Layout */
+/* Header button padding to avoid status bar interference */
+ion-header ion-buttons[slot="start"] ion-menu-button,
+ion-header ion-buttons[slot="end"] ion-button {
+  margin-top: max(8px, env(safe-area-inset-top));
+  padding-top: max(4px, env(safe-area-inset-top));
+}
+
+ion-header {
+  padding-top: env(safe-area-inset-top);
+}
+
+ion-toolbar {
+  --padding-top: env(safe-area-inset-top);
+  --min-height: calc(56px + env(safe-area-inset-top));
+}
+
+/* Layout with reduced whitespace */
 .content-container {
-  padding: 16px;
+  padding: 12px;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -12,72 +28,74 @@ ion-spinner {
   --color: var(--ion-color-primary);
   width: 40px;
   height: 40px;
-  margin: 20px auto;
+  margin: 16px auto;
   display: block;
 }
 
-/* Empty state */
+/* Empty state with Material 3 elevation */
 .empty-state {
   text-align: center;
-  padding: 40px 20px;
-  margin: 40px 0;
+  padding: 24px 16px;
+  margin: 24px 0;
   background-color: var(--ion-card-background);
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   border: 1px solid var(--ion-color-medium);
 }
 
 .empty-state h3 {
   color: var(--ion-text-color);
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   font-weight: 500;
+  font-size: 1.25rem;
 }
 
 .empty-state p {
   color: var(--ion-text-color);
   opacity: 0.85;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   line-height: 1.5;
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
+  font-size: 0.95rem;
 }
 
 /* Latest reading card */
 .latest-reading {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .reading-card {
   background: var(--ion-color-light);
   border-radius: 12px;
-  padding: 20px;
-  margin-top: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-top: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
 .reading-value {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   font-weight: bold;
   color: var(--ion-color-primary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   line-height: 1.2;
 }
 
 .unit {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: normal;
   color: var(--ion-color-medium);
-  margin-left: 6px;
+  margin-left: 4px;
 }
 
 .reading-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 12px;
+  margin-top: 10px;
   color: var(--ion-color-medium);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .reading-pulse {
@@ -92,50 +110,64 @@ ion-spinner {
 
 /* Recent readings section */
 .recent-readings {
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .section-header h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--ion-text-color);
+}
+
+.home-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.home-actions ion-button {
+  --border-radius: 12px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-size: 1rem;
+  height: 48px;
 }
 
 /* Responsive adjustments */
 @media (min-width: 768px) {
   .content-container {
-    padding: 24px;
+    padding: 16px;
   }
   
   ion-content {
-    --padding-start: 5%;
-    --padding-end: 5%;
+    --padding-start: 3%;
+    --padding-end: 3%;
+  }
+  
+  .home-actions {
+    flex-direction: row;
+  }
+  
+  .home-actions ion-button:first-child {
+    margin-right: 12px;
   }
 }
 
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
-  ion-card {
-    --background: var(--ion-color-step-50);
-  }
-  
-  h2 {
-    color: var(--ion-text-color);
-  }
-  
-  /* Ensure empty state has strong contrast in dark mode */
   .empty-state {
     background-color: var(--ion-color-step-100);
     border-color: var(--ion-color-step-150);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
   }
   .empty-state h3,
   .empty-state p {
