@@ -2,6 +2,7 @@ import { setupIonicReact, isPlatform, IonApp } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 /* Components */
 import Layout from './components/Layout/Layout';
@@ -41,6 +42,18 @@ const initializeTheme = async () => {
 
 // Initialize theme on app startup
 initializeTheme();
+
+// Initialize Status Bar on native platforms
+if (Capacitor.isNativePlatform()) {
+  StatusBar.setStyle({ style: Style.Dark }).catch(err => {
+    console.warn('Failed to set status bar style:', err);
+  });
+  
+  // Ensure status bar is visible and properly positioned
+  StatusBar.setOverlaysWebView({ overlay: false }).catch(err => {
+    console.warn('Failed to set status bar overlay:', err);
+  });
+}
 
 // Initialize AdMob on native platforms with improved error handling
 if (Capacitor.isNativePlatform()) {

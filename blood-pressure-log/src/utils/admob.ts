@@ -46,13 +46,24 @@ class AdMobService {
         return;
       }
       
-      console.log('AdMob: Initializing...');
-      const result = await AdMob.initialize?.();
+      console.log('AdMob: Initializing with app ID:', 'ca-app-pub-2130614856218928~1343119067');
+      const result = await AdMob.initialize?.({
+        appId: 'ca-app-pub-2130614856218928~1343119067'
+      });
       console.log('AdMob initialized successfully', result);
       this.isInitialized = true;
     } catch (error) {
       console.error('AdMob initialization failed:', error);
-      throw error;
+      // Try without appId parameter as fallback
+      try {
+        console.log('AdMob: Trying initialization without appId parameter');
+        const result = await AdMob.initialize?.();
+        console.log('AdMob initialized successfully (fallback)', result);
+        this.isInitialized = true;
+      } catch (fallbackError) {
+        console.error('AdMob initialization failed (fallback):', fallbackError);
+        throw fallbackError;
+      }
     }
   }
 
@@ -69,6 +80,7 @@ class AdMobService {
     
     // Ensure AdMob is initialized first
     if (!this.isInitialized) {
+      console.log('AdMob: Initializing before showing banner');
       await this.initialize();
     }
     
@@ -80,10 +92,11 @@ class AdMobService {
         // Set a timeout to resolve with default height if no event received
         setTimeout(() => {
           if (this.heightResolve) {
+            console.log('AdMob: Banner height timeout, using default height');
             this.heightResolve(this.adHeight || 60);
             this.heightResolve = null;
           }
-        }, 2000); // Increased timeout to 2 seconds
+        }, 3000); // Increased timeout to 3 seconds
       });
 
       // Listen for adaptive banner height to avoid covering content
@@ -94,6 +107,7 @@ class AdMobService {
         }
         
         this.bannerListener = await AdMob.addListener('bannerSizeChanged', (info: { height: number }) => {
+          console.log('AdMob: Banner size changed event received', info);
           if (info && typeof info.height === 'number') {
             this.adHeight = info.height;
             // Resolve the promise with the actual height
@@ -106,18 +120,22 @@ class AdMobService {
       }
 
       // Show bottom adaptive banner with improved error handling
-      // Use test ad unit ID for development (replace with your real ad unit ID for production)
+      // Use your real production ad unit ID
       const isDev = import.meta.env.DEV || window.location.hostname === 'localhost';
       const adId = isDev ? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-2130614856218928/8934846232';
       
       console.log('AdMob: Attempting to show banner with ad ID:', adId, 'isDev:', isDev);
       
-      const bannerResult = await AdMob.showBanner?.({
+      const bannerOptions = {
         adId,
         adSize: 'ADAPTIVE_BANNER',
         position: 'BOTTOM_CENTER',
         margin: 0,
-      });
+      };
+      
+      console.log('AdMob: Banner options', bannerOptions);
+      
+      const bannerResult = await AdMob.showBanner?.(bannerOptions);
 
       console.log('AdMob banner show result:', bannerResult);
 
@@ -129,6 +147,34 @@ class AdMobService {
       return height;
     } catch (error) {
       console.warn('AdMob banner failed to show:', error);
+      // Try with test ad unit as fallback if not already using it
+      const isDev = import.meta.env.DEV || window.location.hostname === 'localhost';
+      const currentAdId = isDev ? 'ca-app-pub-3940256099942544/6300978111' : 'ca-app-pub-2130614856218928/8934846232';
+      
+      if (currentAdId !== 'ca-app-pub-3940256099942544/6300978111') {
+        console.log('AdMob: Trying with test ad unit as fallback');
+        try {
+          const testBannerResult = await AdMob.showBanner?.({
+            adId: 'ca-app-pub-3940256099942544/6300978111',
+            adSize: 'ADAPTIVE_BANNER',
+            position: 'BOTTOM_CENTER',
+            margin: 0,
+          });
+          console.log('AdMob test banner show result:', testBannerResult);
+          
+          // Wait for the actual height or timeout
+          const height = await new Promise<number>((resolve) => {
+            setTimeout(() => resolve(60), 2000);
+          });
+          this.adHeight = height;
+          
+          console.log('AdMob test banner shown with height:', height);
+          return height;
+        } catch (testError) {
+          console.warn('AdMob test banner also failed:', testError);
+        }
+      }
+      
       this.adHeight = 0;
       return 0;
     }
